@@ -19,12 +19,12 @@ class ApiModel2 extends CI_Model
 		$sql = "SELECT pel.id as idPel,pel.no_langganan as cIdPel, pel.nama as vcNmPel,pel.alamat as vcAlamat,pel.telepon as cNoTelp,CONCAT(jln.jalan_ID,' ',jln.nama) as vcJalan,lurah.nama as vcWilayah,
 		DATE_FORMAT(periode, '%m/%Y') as cBlth,gol.nama as cKdGol,baca.tanggal_baca as dTglCatat,baca.tanggal_upload as dTglUpload,baca.stand_lalu as nStLalu,
 		baca.stand_ini as nStIni,baca.pakai as nPakai,3 as nPembagi,
-		(SELECT pakai from baca_meter where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu1,
-		(SELECT pakai from baca_meter where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu2,
-		(SELECT pakai from baca_meter where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu3,baca.status_baca as cKetWm,
+		(SELECT pakai from pelayanan.baca_meter where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu1,
+		(SELECT pakai from pelayanan.baca_meter where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu2,
+		(SELECT pakai from pelayanan.baca_meter where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu3,baca.status_baca as cKetWm,
 		baca.latitude as vcLatitude,baca.longitude as vcLongitude,
 		null as vcLatitudeNew,null as vcLongitudeNew,1 as lValidLokasi from 
-		baca_meter as baca, pelanggan as pel, jalan_kelurahan as jk, jalan as jln, kelurahan as lurah , golongan as gol
+		pelayanan.baca_meter as baca, pelayanan.pelanggan as pel, pelayanan.jalan_kelurahan as jk, pelayanan.jalan as jln, pelayanan.kelurahan as lurah , pelayanan.golongan as gol
 		WHERE baca.id_pelanggan=pel.id AND pel.id_jalan_kelurahan=jk.id AND jk.id_jalan=jln.id
 		AND jk.id_kelurahan=lurah.id AND pel.id_golongan=gol.id AND
 		baca.periode = ? AND baca.id_pembaca = ? AND baca.tanggal_baca IS NULL";
@@ -47,7 +47,7 @@ class ApiModel2 extends CI_Model
 
 	public function getStatus()
 	{
-		$sql = "SELECT CAST(id AS NCHAR) as cKode, keterangan as cKet, 1 as status, input_angka as inputAngka FROM status_baca WHERE deleted_at IS NULL";
+		$sql = "SELECT CAST(id AS NCHAR) as cKode, keterangan as cKet, 1 as status, input_angka as inputAngka FROM pelayanan.status_baca WHERE deleted_at IS NULL";
 		$query = $this->db->query($sql);
 		$records = array();
 		foreach ($query->result_array() as $r) {
@@ -60,7 +60,7 @@ class ApiModel2 extends CI_Model
 
 	public function getTarif()
 	{
-		$sql = "SELECT gol.nama as cKdGol,10 as nMin, blok_min as nPakai1 , blok_max as nPakai2, nilai as nHarga FROM golongan as gol, golongan_progresif as tarif WHERE gol.id=tarif.id AND gol.deleted_at IS NULL";
+		$sql = "SELECT gol.nama as cKdGol,10 as nMin, blok_min as nPakai1 , blok_max as nPakai2, nilai as nHarga FROM pelayanan.golongan as gol, pelayanan.golongan_progresif as tarif WHERE gol.id=tarif.id AND gol.deleted_at IS NULL";
 		$query = $this->db->query($sql);
 		$records = array();
 		foreach ($query->result_array() as $r) {
@@ -72,6 +72,22 @@ class ApiModel2 extends CI_Model
 		return $records;
 	}
 
+	public function getJumBacaan($id)
+	{
+		$periode = date('Y-m-') . '01';
+		$sql = "SELECT COUNT(*) as jum FROM pelayanan.baca_meter where periode = ? AND id_pembaca=? ";
+		$query = $this->db->query($sql, array($periode, $id));
+		return $query->row();
+	}
+
+	public function getJumBelumBacaan($id)
+	{
+		$periode = date('Y-m-') . '01';
+		$sql = "SELECT COUNT(*) as jum FROM pelayanan.baca_meter where periode = ? AND id_pembaca=? AND tanggal_baca IS NULL";
+		$query = $this->db->query($sql, array($periode, $id));
+		return $query->row();
+	}
+
 
 	public function doLogin($id, $pass)
 
@@ -79,7 +95,7 @@ class ApiModel2 extends CI_Model
 		$x = [
 			"status" => "Unauthorized"
 		];
-		$sql = "SELECT id,nama FROM pembaca WHERE kode=? AND kata_sandi=?";
+		$sql = "SELECT id,nama FROM pelayanan.pembaca WHERE kode=? AND kata_sandi=?";
 		$query = $this->db->query($sql, array($id, $pass));
 		if ($query->num_rows() > 0) {
 			return $query->result_array();
@@ -91,7 +107,7 @@ class ApiModel2 extends CI_Model
 	{
 		$periode = date('Y-m-') . '01';
 		$cBlth = date('m_Y/');
-		$sql = "UPDATE baca_meter SET stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND tanggal_baca IS NULL";
+		$sql = "UPDATE pelayanan.baca_meter SET stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND tanggal_baca IS NULL";
 		$this->db->trans_begin();
 		foreach ($data as $da) {
 			$query = $this->db->query("SELECT id FROM pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
@@ -109,7 +125,7 @@ class ApiModel2 extends CI_Model
 	{
 		$periode = date('Y-m-') . '01';
 		$cBlth = date('m_Y/');
-		$sql = "UPDATE baca_meter SET stand_ini = ?, stand_ini_awal = ? , pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND stats_baca!='BACAMETER MANDIRI'";
+		$sql = "UPDATE pelayanan.baca_meter SET stand_ini = ?, stand_ini_awal = ? , pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND stats_baca!='BACAMETER MANDIRI'";
 		$this->db->trans_begin();
 		foreach ($data as $da) {
 			$query = $this->db->query("SELECT id FROM pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));

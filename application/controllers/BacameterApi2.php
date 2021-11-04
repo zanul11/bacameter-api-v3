@@ -42,6 +42,18 @@ class BacameterApi2 extends REST_Controller
         $this->response($data);
     }
 
+    function jumbacaan_get($id)
+    {
+        $data = $this->api->getJumBacaan($id);
+        $this->response($data);
+    }
+
+    function jumbelumbaca_get($id)
+    {
+        $data = $this->api->getJumBelumBacaan($id);
+        $this->response($data);
+    }
+
     function tarif_get()
     {
         $data = $this->api->getTarif();
