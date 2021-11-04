@@ -9,21 +9,25 @@ require APPPATH . '/libraries/REST_Controller.php';
 // use namespace
 use Restserver\Libraries\REST_Controller;
 
-class BacameterApi extends REST_Controller
+class BacameterApi2 extends REST_Controller
 {
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('ApiModel', 'api');
+        $this->load->model('ApiModel2', 'api');
     }
 
     public function index_get()
     {
-        return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 1.0', 'cBlth' => date('m/Y'), 'host' => $this->db->hostname, 'db' => $this->db->database, "php" => phpversion()));
+        return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 2.0 (connect with Aplikasi Pelayanan)', 'cBlth' => date('m/Y'), 'host' => $this->db->hostname, 'db' => $this->db->database, "php" => phpversion()));
     }
 
-
+    public function bacameter_get($cIdPembaca)
+    {
+        $data = $this->api->getDataBacaan($cIdPembaca);
+        $this->response($data);
+    }
 
     public function getDatabyUser_post()
     {
@@ -44,9 +48,9 @@ class BacameterApi extends REST_Controller
     }
 
 
-    public function doLogin_post()
+    public function auth_get($id, $pass)
     {
-        $data = $this->api->doLogin($this->post('id'), $this->post('pass'));
+        $data = $this->api->doLogin($id, $pass);
         $this->response($data);
     }
 
