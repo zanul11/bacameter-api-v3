@@ -14,6 +14,8 @@ class BacameterApi2 extends REST_Controller
 
     function __construct()
     {
+
+        //add api 2
         parent::__construct();
         $this->load->model('ApiModel2', 'api');
     }
