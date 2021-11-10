@@ -16,7 +16,7 @@ class ApiModel2 extends CI_Model
 		$blnLalu2 = date('Y-m-', strtotime(date('Y-m') . " -2 month")) . '01';
 		$blnLalu3 = date('Y-m-', strtotime(date('Y-m') . " -3 month")) . '01';
 
-		$sql = "SELECT pel.id as idPel,pel.no_langganan as cIdPel, pel.nama as vcNmPel,pel.alamat as vcAlamat,pel.telepon as cNoTelp,CONCAT(jln.jalan_ID,' ',jln.nama) as vcJalan,lurah.nama as vcWilayah,
+		$sql = "SELECT pel.id as idPel,pel.no_langganan as cIdPel, pel.nama as vcNmPel,pel.alamat as vcAlamat,pel.telepon as cNoTelp,CONCAT(jln.id,' ',jln.nama) as vcJalan,lurah.nama as vcWilayah,
 		DATE_FORMAT(periode, '%m/%Y') as cBlth,gol.nama as cKdGol,baca.tanggal_baca as dTglCatat,baca.tanggal_upload as dTglUpload,baca.stand_lalu as nStLalu,
 		baca.stand_ini as nStIni,baca.pakai as nPakai,3 as nPembagi,
 		(SELECT pakai from pelayanan.baca_meter where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu1,
@@ -24,9 +24,9 @@ class ApiModel2 extends CI_Model
 		(SELECT pakai from pelayanan.baca_meter where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu3,baca.status_baca as cKetWm,
 		baca.latitude as vcLatitude,baca.longitude as vcLongitude,
 		null as vcLatitudeNew,null as vcLongitudeNew,1 as lValidLokasi from 
-		pelayanan.baca_meter as baca, pelayanan.pelanggan as pel, pelayanan.jalan_kelurahan as jk, pelayanan.jalan as jln, pelayanan.kelurahan as lurah , pelayanan.golongan as gol
-		WHERE baca.id_pelanggan=pel.id AND pel.id_jalan_kelurahan=jk.id AND jk.id_jalan=jln.id
-		AND jk.id_kelurahan=lurah.id AND pel.id_golongan=gol.id AND
+		pelayanan.baca_meter as baca, pelayanan.pelanggan as pel, pelayanan.jalan as jln, pelayanan.kelurahan as lurah , pelayanan.golongan as gol
+		WHERE baca.id_pelanggan=pel.id AND pel.id_jalan=jln.id
+		AND jln.id_kelurahan=lurah.id AND pel.id_golongan=gol.id AND
 		baca.periode = ? AND baca.id_pembaca = ? AND baca.tanggal_baca IS NULL";
 		$query = $this->db->query($sql, array($blnLalu1, $blnLalu2, $blnLalu3, $periode, $idbaca));
 
