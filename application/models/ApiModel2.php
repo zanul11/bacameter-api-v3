@@ -110,7 +110,7 @@ class ApiModel2 extends CI_Model
 		$sql = "UPDATE pelayanan.baca_meter SET stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND tanggal_baca IS NULL";
 		$this->db->trans_begin();
 		foreach ($data as $da) {
-			$query = $this->db->query("SELECT id FROM pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
+			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
 			$row = $query->row_array();
 			$this->db->query($sql, array($da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . $cBlth . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  $periode, $row['id']));
 		}
@@ -128,7 +128,7 @@ class ApiModel2 extends CI_Model
 		$sql = "UPDATE pelayanan.baca_meter SET stand_ini = ?, stand_ini_awal = ? , pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND stats_baca!='BACAMETER MANDIRI'";
 		$this->db->trans_begin();
 		foreach ($data as $da) {
-			$query = $this->db->query("SELECT id FROM pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
+			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
 			$row = $query->row_array();
 			$this->db->query($sql, array($da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . $cBlth . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  $periode, $row['id']));
 		}
