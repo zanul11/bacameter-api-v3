@@ -110,11 +110,16 @@ class ApiModel2 extends CI_Model
 		$sql = "UPDATE pelayanan.baca_meter SET stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND tanggal_baca IS NULL";
 		$this->db->trans_begin();
 		foreach ($data as $da) {
-			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
-			$row = $query->row_array();
-			$this->db->query($sql, array($da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . $cBlth . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  $periode, $row['id']));
+			if ($da['cBlth'] == '02/2022') {
+				$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
+				$row = $query->row_array();
+				$this->db->query($sql, array($da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . '02_2022/' . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  '2022-02-01', $row['id']));
+			} else {
+				$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
+				$row = $query->row_array();
+				$this->db->query($sql, array($da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . $cBlth . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  $periode, $row['id']));
+			}
 		}
-
 		$this->db->trans_complete();
 		if ($this->db->trans_status())
 			return true;
