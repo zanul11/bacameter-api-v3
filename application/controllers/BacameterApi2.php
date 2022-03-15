@@ -126,7 +126,8 @@ class BacameterApi2 extends REST_Controller
         }
         $response["success"] = $success;
         $response["message"] = $message;
-        echo json_encode($response);
+        // echo json_encode($response);
+        return $this->response($response);
     }
 
     public function uploadFoto_post()
