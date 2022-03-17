@@ -72,6 +72,23 @@ class ApiModel2 extends CI_Model
 		return $records;
 	}
 
+	public function getTarif2()
+	{
+		$sql = "SELECT (nilai*10) as hargaMinimum, 10 as minimum, gol.nama as cKdGol,blok_min as nMin, blok_max-blok_min as nPakai1 , blok_max as nPakai2, nilai as nHarga FROM pelayanan.golongan as gol, pelayanan.golongan_progresif as tarif WHERE gol.id=tarif.id AND gol.deleted_at IS NULL";
+		$query = $this->db->query($sql);
+		$records = array();
+		foreach ($query->result_array() as $r) {
+			$r['hargaMinimum'] = (string) intval($r['hargaMinimum']);
+			$r['minimum'] = intval($r['minimum']);
+			$r['nMin'] = intval($r['nMin']);
+			$r['nPakai1'] = intval($r['nPakai1']);
+			$r['nPakai2'] = intval($r['nPakai2']);
+			$r['nHarga'] = (string) intval($r['nHarga']);
+			$records[] = $r;
+		}
+		return $records;
+	}
+
 	public function getJumBacaan($id)
 	{
 		$periode = date('Y-m-') . '01';

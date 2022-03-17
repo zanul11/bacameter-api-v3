@@ -60,6 +60,12 @@ class BacameterApi2 extends REST_Controller
         $this->response($data);
     }
 
+    function tarif2_get()
+    {
+        $data = $this->api->getTarif2();
+        $this->response($data);
+    }
+
 
     public function auth_get($id, $pass)
     {
