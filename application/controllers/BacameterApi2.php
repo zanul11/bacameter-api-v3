@@ -84,6 +84,7 @@ class BacameterApi2 extends REST_Controller
             $this->response(array('status' => false, 'message' => 'data gagal di upload'));
         }
     }
+
     public function sinkron_post()
     {
         $data = json_decode($this->post('data'), true);
@@ -95,6 +96,34 @@ class BacameterApi2 extends REST_Controller
             $this->response(array('status' => false, 'message' => 'data gagal di upload'));
         }
     }
+
+
+    public function uploadSurvey_post()
+    {
+        $data = json_decode($this->post('data'), true);
+        $id = $this->post('id');
+        $flag = $this->api->updateDataSurvey($data, $id);
+        if ($flag) {
+            $this->response(array('status' => true, 'message' => 'data berhasil di upload guys',));
+        } else {
+            $this->response(array('status' => false, 'message' => 'data gagal di upload'));
+        }
+    }
+
+    public function sinkronSurvey_post()
+    {
+        $data = json_decode($this->post('data'), true);
+        $id = $this->post('id');
+        $flag = $this->api->sinkronDataSurvey($data, $id);
+        if ($flag) {
+            $this->response(array('status' => true, 'message' => 'data berhasil di sinkron guys',));
+        } else {
+            $this->response(array('status' => false, 'message' => 'data gagal di upload'));
+        }
+    }
+
+
+
     public function uploadImage_post()
     {
         $nama = $this->post('nama');
