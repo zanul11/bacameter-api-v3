@@ -16,7 +16,7 @@ class ApiModel2 extends CI_Model
 		$blnLalu2 = date('Y-m-', strtotime(date('Y-m') . " -2 month")) . '01';
 		$blnLalu3 = date('Y-m-', strtotime(date('Y-m') . " -3 month")) . '01';
 
-		$sql = "SELECT pel.id as idPel,pel.no_langganan as cIdPel, pel.nama as vcNmPel,pel.alamat as vcAlamat,DATE(pel.tanggal_ganti_water_meter) as dTglGantiMeter,pel.telepon as cNoTelp,jln.nama as vcJalan,lurah.nama as vcWilayah,
+		$sql = "SELECT pel.id as idPel,pel.no_langganan as cIdPel, pel.nama as vcNmPel,pel.alamat as vcAlamat,DATE_FORMAT(pel.tanggal_ganti_water_meter,'%d-%m-%Y') as dTglGantiMeter,pel.telepon as cNoTelp,jln.nama as vcJalan,lurah.nama as vcWilayah,
 		DATE_FORMAT(periode, '%m/%Y') as cBlth, gol.nama as cKdGol, gol.keterangan as cKetGol,baca.tanggal_baca as dTglCatat,baca.tanggal_upload as dTglUpload,baca.stand_lalu as nStLalu,
 		baca.stand_ini as nStIni,baca.pakai as nPakai,3 as nPembagi,
 		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu1,
