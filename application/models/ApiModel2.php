@@ -16,7 +16,7 @@ class ApiModel2 extends CI_Model
 		$blnLalu2 = date('Y-m-', strtotime(date('Y-m') . " -2 month")) . '01';
 		$blnLalu3 = date('Y-m-', strtotime(date('Y-m') . " -3 month")) . '01';
 
-		$sql = "SELECT pel.id as idPel,pel.no_langganan as cIdPel, pel.nama as vcNmPel,pel.alamat as vcAlamat,DATE_FORMAT(pel.tanggal_ganti_water_meter,'%d-%m-%Y') as dTglGantiMeter,pel.telepon as cNoTelp,jln.nama as vcJalan,lurah.nama as vcWilayah,
+		$sql = "SELECT pel.id as idPel,pel.no_langganan as cIdPel, pel.nama as vcNmPel,pel.alamat as vcAlamat, DATE_FORMAT(pel.tanggal_ganti_water_meter,'%d-%m-%Y') as dTglGantiMeter,pel.telepon as cNoTelp,jln.nama as vcJalan,lurah.nama as vcWilayah,
 		DATE_FORMAT(periode, '%m/%Y') as cBlth, gol.nama as cKdGol, gol.keterangan as cKetGol,baca.tanggal_baca as dTglCatat,baca.tanggal_upload as dTglUpload,baca.stand_lalu as nStLalu,
 		baca.stand_ini as nStIni,baca.pakai as nPakai,3 as nPembagi,
 		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu1,
@@ -174,7 +174,11 @@ class ApiModel2 extends CI_Model
 		foreach ($data as $da) {
 			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
 			$row = $query->row_array();
-			$this->db->query($sql, array($da['cIndikasiKelainan'], base_url('images/') . $cBlth . $id . '/' . $da['txtFotoSurvey'], $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . $cBlth . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  $periode, $row['id']));
+			$name_foto_survey = null;
+			if ($da['txtFotoSurvey'] != null) {
+				$name_foto_survey = base_url('images/') . $cBlth . $id . '/' . $da['txtFotoSurvey'];
+			}
+			$this->db->query($sql, array($da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . $cBlth . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  $periode, $row['id']));
 		}
 		$this->db->trans_complete();
 		if ($this->db->trans_status())
@@ -191,7 +195,11 @@ class ApiModel2 extends CI_Model
 		foreach ($data as $da) {
 			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
 			$row = $query->row_array();
-			$this->db->query($sql, array($da['cIndikasiKelainan'], base_url('images/') . $cBlth . $id . '/' . $da['txtFotoSurvey'], $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . $cBlth . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  $periode, $row['id']));
+			$name_foto_survey = null;
+			if ($da['txtFotoSurvey'] != null) {
+				$name_foto_survey = base_url('images/') . $cBlth . $id . '/' . $da['txtFotoSurvey'];
+			}
+			$this->db->query($sql, array($da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . $cBlth . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  $periode, $row['id']));
 		}
 
 		$this->db->trans_complete();
