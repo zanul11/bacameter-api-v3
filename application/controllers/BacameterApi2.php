@@ -30,6 +30,13 @@ class BacameterApi2 extends REST_Controller
         $this->response($data);
     }
 
+    public function bacameterWithRekening_get($cIdPembaca)
+    {
+        $data = $this->api->getDataBacaanWithRekening($cIdPembaca);
+        $this->response($data);
+    }
+
+
     public function getDatabyUser_post()
     {
         $data = $this->api->getData($this->post('bt'), $this->post('user'));

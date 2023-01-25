@@ -21,7 +21,8 @@ class ApiModel2 extends CI_Model
 		baca.stand_ini as nStIni,baca.pakai as nPakai,3 as nPembagi,
 		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu1,
 		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu2,
-		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu3,baca.status_baca as cKetWm,
+		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu3,
+		baca.status_baca as cKetWm,
 		baca.latitude as vcLatitude,baca.longitude as vcLongitude,
 		null as vcLatitudeNew,null as vcLongitudeNew,1 as lValidLokasi from 
 		pelayanan.baca_meter as baca, pelayanan.pelanggan as pel, pelayanan.jalan as jln, pelayanan.kelurahan as lurah , pelayanan.golongan as gol
@@ -40,6 +41,57 @@ class ApiModel2 extends CI_Model
 			$r['nPakaiLalu2'] = intval($r['nPakaiLalu2']);
 			$r['nPakaiLalu3'] = intval($r['nPakaiLalu3']);
 			$r['lValidLokasi'] = intval($r['lValidLokasi']);
+			$records[] = $r;
+		}
+		return $records;
+	}
+
+	public function getDataBacaanWithRekening($idbaca)
+	{
+		$periode = date('Y-m-') . '01';
+		$blnLalu1 = date('Y-m-', strtotime(date('Y-m') . " -1 month")) . '01';
+		$blnLalu2 = date('Y-m-', strtotime(date('Y-m') . " -2 month")) . '01';
+		$blnLalu3 = date('Y-m-', strtotime(date('Y-m') . " -3 month")) . '01';
+
+		$sql = "SELECT pel.id as idPel,pel.no_langganan as cIdPel, pel.nama as vcNmPel,pel.alamat as vcAlamat, DATE_FORMAT(pel.tanggal_ganti_water_meter,'%d-%m-%Y') as dTglGantiMeter,pel.telepon as cNoTelp,jln.nama as vcJalan,lurah.nama as vcWilayah,
+		DATE_FORMAT(periode, '%m/%Y') as cBlth, gol.nama as cKdGol, gol.keterangan as cKetGol,baca.tanggal_baca as dTglCatat,baca.tanggal_upload as dTglUpload,baca.stand_lalu as nStLalu,
+		baca.stand_ini as nStIni,baca.pakai as nPakai,3 as nPembagi,
+		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu1,
+		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu2,
+		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu3,
+		baca.status_baca as cKetWm,
+		baca.latitude as vcLatitude,baca.longitude as vcLongitude,
+		null as vcLatitudeNew,null as vcLongitudeNew,1 as lValidLokasi from 
+		pelayanan.baca_meter as baca, pelayanan.pelanggan as pel, pelayanan.jalan as jln, pelayanan.kelurahan as lurah , pelayanan.golongan as gol
+		WHERE baca.id_pelanggan=pel.id AND pel.id_jalan=jln.id
+		AND jln.id_kelurahan=lurah.id AND pel.id_golongan=gol.id AND
+		baca.periode = ? AND baca.id_pembaca = ? AND baca.tanggal_baca IS NULL";
+		$query = $this->db->query($sql, array($blnLalu1, $blnLalu2, $blnLalu3, $periode, $idbaca));
+
+		$records = array();
+		foreach ($query->result_array() as $r) {
+			$r['nStLalu'] = intval($r['nStLalu']);
+			$r['nStIni'] = intval($r['nStIni']);
+			$r['nPakai'] = intval($r['nPakai']);
+			$r['nPembagi'] = intval($r['nPembagi']);
+			$r['nPakaiLalu1'] = intval($r['nPakaiLalu1']);
+			$r['nPakaiLalu2'] = intval($r['nPakaiLalu2']);
+			$r['nPakaiLalu3'] = intval($r['nPakaiLalu3']);
+			$r['lValidLokasi'] = intval($r['lValidLokasi']);
+			$r['rekening'] = $this->getRekening($r['idPel']);
+			$records[] = $r;
+		}
+		return $records;
+	}
+
+
+	public function getRekening($id)
+	{
+		$sql = "SELECT periode,harga_air+biaya_retribusi+biaya_jasa_lingkungan+biaya_pemeliharaan+biaya_administrasi+biaya_materai+biaya_denda+biaya_ppn-diskon as total from pelayanan.rekening_air where id_pelanggan=? AND kasir is NULL";
+		$query = $this->db->query($sql, array($id));
+		$records = array();
+		foreach ($query->result_array() as $r) {
+			$r['total'] = intval($r['total']);
 			$records[] = $r;
 		}
 		return $records;
