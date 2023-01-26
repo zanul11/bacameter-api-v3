@@ -73,6 +73,11 @@ class BacameterApi2 extends REST_Controller
         $this->response($data);
     }
 
+    function denda_get()
+    {
+        $data = $this->api->getTarifDenda();
+        $this->response($data);
+    }
 
     public function auth_get($id, $pass)
     {
