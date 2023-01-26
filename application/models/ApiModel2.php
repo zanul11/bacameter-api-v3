@@ -274,4 +274,49 @@ class ApiModel2 extends CI_Model
 			return true;
 		return false;
 	}
+
+
+
+	public function updateDataV3($data, $id)
+	{
+		$periode = date('Y-m-') . '01';
+		$cBlth = date('m_Y/');
+		$sql = "UPDATE pelayanan.baca_meter SET telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND tanggal_baca IS NULL";
+		$this->db->trans_begin();
+		foreach ($data as $da) {
+			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
+			$row = $query->row_array();
+			$name_foto_survey = null;
+			if ($da['txtFotoSurvey'] != null) {
+				$name_foto_survey = base_url('images/') . $cBlth . $id . '/' . $da['txtFotoSurvey'];
+			}
+			$this->db->query($sql, array($da['telepon'], $da['alamat'], $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . $cBlth . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  $periode, $row['id']));
+		}
+		$this->db->trans_complete();
+		if ($this->db->trans_status())
+			return true;
+		return false;
+	}
+
+	public function sinkronDataV3($data, $id)
+	{
+		$periode = date('Y-m-') . '01';
+		$cBlth = date('m_Y/');
+		$sql = "UPDATE pelayanan.baca_meter SET telepon = ?, alamat = ?, indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ? , pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND status_baca!='BACAMETER MANDIRI'";
+		$this->db->trans_begin();
+		foreach ($data as $da) {
+			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
+			$row = $query->row_array();
+			$name_foto_survey = null;
+			if ($da['txtFotoSurvey'] != null) {
+				$name_foto_survey = base_url('images/') . $cBlth . $id . '/' . $da['txtFotoSurvey'];
+			}
+			$this->db->query($sql, array($da['telepon'], $da['alamat'], $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], base_url('images/') . $cBlth . $id . '/' . $da['txtFoto'], $da['dTglCatat'],  $periode, $row['id']));
+		}
+
+		$this->db->trans_complete();
+		if ($this->db->trans_status())
+			return true;
+		return false;
+	}
 }

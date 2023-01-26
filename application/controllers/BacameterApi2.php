@@ -134,6 +134,30 @@ class BacameterApi2 extends REST_Controller
         }
     }
 
+    public function uploadV3_post()
+    {
+        $data = json_decode($this->post('data'), true);
+        $id = $this->post('id');
+        $flag = $this->api->updateDataV3($data, $id);
+        if ($flag) {
+            $this->response(array('status' => true, 'message' => 'data berhasil di upload guys',));
+        } else {
+            $this->response(array('status' => false, 'message' => 'data gagal di upload'));
+        }
+    }
+
+    public function sinkronV3_post()
+    {
+        $data = json_decode($this->post('data'), true);
+        $id = $this->post('id');
+        $flag = $this->api->sinkronDataV3($data, $id);
+        if ($flag) {
+            $this->response(array('status' => true, 'message' => 'data berhasil di sinkron guys',));
+        } else {
+            $this->response(array('status' => false, 'message' => 'data gagal di upload'));
+        }
+    }
+
 
 
     public function uploadImage_post()
