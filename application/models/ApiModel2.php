@@ -61,7 +61,7 @@ class ApiModel2 extends CI_Model
 		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu3,
 		baca.status_baca as cKetWm,
 		baca.latitude as vcLatitude,baca.longitude as vcLongitude,
-		null as vcLatitudeNew,null as vcLongitudeNew,1 as lValidLokasi from 
+		null as vcLatitudeNew,null as vcLongitudeNew, baca.valid_koordinat as lValidLokasi from 
 		pelayanan.baca_meter as baca, pelayanan.pelanggan as pel, pelayanan.jalan as jln, pelayanan.kelurahan as lurah , pelayanan.golongan as gol
 		WHERE baca.id_pelanggan=pel.id AND pel.id_jalan=jln.id
 		AND jln.id_kelurahan=lurah.id AND pel.id_golongan=gol.id AND
