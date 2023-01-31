@@ -127,7 +127,7 @@ class ApiModel2 extends CI_Model
 
 	public function getTarifDenda()
 	{
-		$sql = "SELECT gol.nama as cKdGol, nilai as nHarga FROM pelayanan.golongan as gol, pelayanan.tarif_denda_detail as denda WHERE gol.id=denda.id_golongan";
+		$sql = "SELECT denda.nama_golongan as cKdGol, nilai as nHarga FROM  pelayanan.tarif_denda_detail as denda ";
 		$query = $this->db->query($sql);
 		// $records = array();
 		// foreach ($query->result_array() as $r) {
