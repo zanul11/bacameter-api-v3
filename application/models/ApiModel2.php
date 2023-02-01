@@ -141,7 +141,7 @@ class ApiModel2 extends CI_Model
 
 	public function getTarif2()
 	{
-		$sql = "SELECT (nilai*10) as hargaMinimum, 10 as minimum, gol.nama as cKdGol,blok_min as nMin, blok_max-blok_min as nPakai1 , blok_max as nPakai2, nilai as nHarga FROM pelayanan.golongan as gol, pelayanan.golongan_progresif as tarif WHERE gol.id=tarif.id AND gol.deleted_at IS NULL";
+		$sql = "SELECT (nilai*10) as hargaMinimum, 10 as minimum, gol.nama as cKdGol,blok_min as nMin, blok_max-blok_min as nPakai1 , blok_max as nPakai2, nilai as nHarga FROM pelayanan.golongan as gol, pelayanan.golongan_progresif as tarif WHERE gol.id=tarif.id AND gol.status=1 AND gol.deleted_at IS NULL";
 		$query = $this->db->query($sql);
 		$records = array();
 		foreach ($query->result_array() as $r) {
