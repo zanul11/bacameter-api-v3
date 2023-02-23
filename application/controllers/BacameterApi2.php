@@ -85,6 +85,15 @@ class BacameterApi2 extends REST_Controller
         $this->response($data);
     }
 
+    public function progresbaca_get($id)
+    {
+        $bacaan = $this->api->getBacaan($id);
+        $terbaca = $this->api->getBacaanTerbaca($id);
+        $this->response(array('bacaan' => $bacaan, 'terbaca' => $terbaca));
+    }
+
+
+
     public function upload_post()
     {
         $data = json_decode($this->post('data'), true);
