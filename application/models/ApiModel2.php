@@ -322,14 +322,14 @@ class ApiModel2 extends CI_Model
 	public function getBacaan($id)
 	{
 		$date = date('Y-m-') . '01';
-		$sql = "select count(*) from baca_meter where periode=? and id_pembaca=?";
+		$sql = "select count(*) from pelayanan.baca_meter where periode=? and id_pembaca=?";
 		$query = $this->db->query($sql, array($date, $id));
 		return $query->result_array();
 	}
 	public function getBacaanTerbaca($id)
 	{
 		$date = date('Y-m-') . '01';
-		$sql = "select count(*) from baca_meter where periode=? and id_pembaca=?";
+		$sql = "select count(*) from pelayanan.baca_meter where periode=? and id_pembaca=?";
 		$query = $this->db->query($sql, array($date, $id));
 		return $query->result_array();
 	}
