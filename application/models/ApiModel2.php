@@ -162,7 +162,7 @@ class ApiModel2 extends CI_Model
 		$periode = date('Y-m-') . '01';
 		$sql = "SELECT COUNT(*) as jum FROM pelayanan.baca_meter where periode = ? AND id_pembaca=? ";
 		$query = $this->db->query($sql, array($periode, $id));
-		return $query->row();
+		return $query->row()->jum;
 	}
 
 	public function getJumBelumBacaan($id)
@@ -170,7 +170,7 @@ class ApiModel2 extends CI_Model
 		$periode = date('Y-m-') . '01';
 		$sql = "SELECT COUNT(*) as jum FROM pelayanan.baca_meter where periode = ? AND id_pembaca=? AND tanggal_baca IS NULL";
 		$query = $this->db->query($sql, array($periode, $id));
-		return $query->row();
+		return $query->row()->jum;
 	}
 
 

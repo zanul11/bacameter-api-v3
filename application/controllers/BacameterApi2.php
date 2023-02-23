@@ -87,9 +87,9 @@ class BacameterApi2 extends REST_Controller
 
     public function progresbaca_get($id)
     {
-        $bacaan = $this->api->getBacaan($id);
-        $terbaca = $this->api->getBacaanTerbaca($id);
-        $this->response(array('bacaan' => $bacaan, 'terbaca' => $terbaca));
+        $bacaan = (int)$this->api->getJumBacaan($id);
+        $belum_terbaca = (int)$this->api->getJumBelumBacaan($id);
+        $this->response(array('bacaan' => $bacaan, 'belum_terbaca' => $belum_terbaca, 'sudah_terbaca' => $bacaan - $belum_terbaca));
     }
 
 
