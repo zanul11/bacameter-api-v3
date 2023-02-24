@@ -92,7 +92,7 @@ class BacameterApi2 extends REST_Controller
         $this->response(array('bacaan' => $bacaan, 'belum_terbaca' => $belum_terbaca, 'sudah_terbaca' => $bacaan - $belum_terbaca));
     }
 
-    public function version_get($id)
+    public function version_get()
     {
         //tipe 0 = update langsung, 1 = unistall apk lama
         $this->response(array('version' => 'v1', 'tipe' => 0));
