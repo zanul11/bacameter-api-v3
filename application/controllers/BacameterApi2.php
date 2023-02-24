@@ -92,6 +92,11 @@ class BacameterApi2 extends REST_Controller
         $this->response(array('bacaan' => $bacaan, 'belum_terbaca' => $belum_terbaca, 'sudah_terbaca' => $bacaan - $belum_terbaca));
     }
 
+    public function version_get($id)
+    {
+        $this->response(array('version' => 'v1'));
+    }
+
 
 
     public function upload_post()
