@@ -37,6 +37,14 @@ class BacameterApi2 extends REST_Controller
     }
 
 
+    public function bacameterWithRekeningV2_get($cIdPembaca)
+    {
+        //ambil semua data bacaan yg sudah n belum terbaca
+        $data = $this->api->getDataBacaanWithRekeningV2($cIdPembaca);
+        $this->response($data);
+    }
+
+
     public function getDatabyUser_post()
     {
         $data = $this->api->getData($this->post('bt'), $this->post('user'));
