@@ -97,6 +97,7 @@ class ApiModel2 extends CI_Model
 		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu1,
 		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu2,
 		(SELECT pakai from pelayanan.rekening_air where periode= ? AND id_pelanggan=pel.id) as nPakaiLalu3,
+	
 		baca.status_baca as cKetWm,
 		baca.latitude as vcLatitude,baca.longitude as vcLongitude,baca.foto as txtFoto,
 		null as vcLatitudeNew,null as vcLongitudeNew, baca.valid_koordinat as lValidLokasi from 
@@ -104,7 +105,7 @@ class ApiModel2 extends CI_Model
 		WHERE baca.id_pelanggan=pel.id AND pel.id_jalan=jln.id
 		AND jln.id_kelurahan=lurah.id AND pel.id_golongan=gol.id AND
 		baca.periode = ? AND baca.id_pembaca = ?";
-		$query = $this->db->query($sql, array($blnLalu1, $blnLalu2, $blnLalu3, $periode, $idbaca));
+		$query = $this->db->query($sql, array($blnLalu1, $blnLalu2, $blnLalu3,  $periode, $idbaca));
 
 		$records = array();
 		foreach ($query->result_array() as $r) {
@@ -117,6 +118,7 @@ class ApiModel2 extends CI_Model
 			$r['nPakaiLalu3'] = intval($r['nPakaiLalu3']);
 			$r['lValidLokasi'] = intval($r['lValidLokasi']);
 			$r['rekening'] = $this->getRekening($r['idPel']);
+			$r['status_baca'] = $this->getStatusBaca($blnLalu1, $r['idPel']);
 			$records[] = $r;
 		}
 		return $records;
@@ -133,6 +135,15 @@ class ApiModel2 extends CI_Model
 			$r['denda'] = intval($r['denda']);
 			$records[] = $r;
 		}
+		return $records;
+	}
+
+	public function getStatusBaca($periode, $id)
+	{
+		$sql = "SELECT status_baca from pelayanan.baca_meter where periode<=? and id_pelanggan=? order by periode desc limit 3";
+		$query = $this->db->query($sql, array($periode, $id));
+		$records = array();
+		$records = $query->result_array();
 		return $records;
 	}
 
