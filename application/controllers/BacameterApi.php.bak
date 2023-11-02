@@ -23,11 +23,8 @@ class BacameterApi extends REST_Controller
         return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 1.0', 'cBlth' => date('m/Y'), 'host' => $this->db->hostname, 'db' => $this->db->database, "php" => phpversion()));
     }
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 6ef9694d5a1cce917b66d333923109863c67bb82
     public function getDatabyUser_post()
     {
         $data = $this->api->getData($this->post('bt'), $this->post('user'));
