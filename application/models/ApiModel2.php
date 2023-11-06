@@ -368,7 +368,7 @@ class ApiModel2 extends CI_Model
 	{
 		$periode = date('Y-m-') . '01';
 		$cBlth = date('m_Y/');
-		$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?, telepon = ?, alamat = ?, indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ? , pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND status_baca!='BACAMETER MANDIRI' AND tanggal_baca IS NULL";
+		$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?, telepon = ?, alamat = ?, indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ? , pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND tanggal_baca IS NULL";
 		$this->db->trans_begin();
 		foreach ($data as $da) {
 			$foto = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
