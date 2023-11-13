@@ -324,12 +324,51 @@ class ApiModel2 extends CI_Model
 			return true;
 		return false;
 	}
+	public function autonoumberAduan()
+	{
+		$this->db->limit(1);
+		$this->db->order_by('dTglSelesaiInput', 'DESC');
+		$qry = $this->db->get('pengaduan.tt_aduan');
+		$rs = $qry->result();
+		$nr = $qry->num_rows();
 
+		$v_blth        = date("mY");
+		$v_blthlast    = date("mY", strtotime($rs[0]->dTglSelesaiInput));
+
+		$v_bln        = date("m");
+		$v_a_bln    = array('I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
+		$v_blnf        = $v_a_bln[$v_bln - 1];
+
+		$v_thn        = date("Y");
+
+		if ($nr <= 0) {
+			$v_kdaduan = "00001/ADUAN/PTAM/I/" . $v_thn;
+		} else {
+			if ($v_blth != $v_blthlast) {
+				$v_a = "00001";
+			} else {
+				$v_a = sprintf("%05s", substr($rs[0]->cKdAduan, 0, 5) + 1);
+			}
+			$v_kdaduan    = $v_a . "/ADUAN/PTAM/" . $v_blnf . "/" . $v_thn;
+		}
+		return $v_kdaduan;
+	}
+
+	public function getWilayahFromDesa($desa)
+	{
+		$this->db->limit(1);
+		$this->db->select('kelurahan.id_kecamatan AS id');
+		$this->db->from('pelayanan.kelurahan');
+		$this->db->where('kelurahan.nama', $desa);
+		$query = $this->db->get();
+		return $query->result()[0]->id;
+	}
 	public function updateDataV3($data, $id)
 	{
 		$periode = date('Y-m-') . '01';
 		$cBlth = date('m_Y/');
 		$this->db->trans_begin();
+
 
 		foreach ($data as $da) {
 			// return substr($da['txtFoto'], -27);
@@ -341,27 +380,41 @@ class ApiModel2 extends CI_Model
 				$name_foto_survey = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFotoSurvey'];
 			}
 
-			// $query_cek_sudah_baca = $this->db->query("SELECT * FROM pelayanan.baca_meter WHERE periode = ? AND id_pelanggan = ? ", array($periode, $row['id']));
-			// $row_cek_sudah_baca = $query_cek_sudah_baca->row_array();
-
-			// if ($row_cek_sudah_baca['tanggal_upload'] == null) {
-			// 	return 'belum upload';
-			// } else {
-			// 	return 'sudah upload';
-			// }
-
 			if ($da['cKetWM'] == null) {
 				$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?,telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ?";
 				$this->db->query($sql, array(($da['vcLatitudeNew'] != 'null') ? $da['vcLatitudeNew'] : null, ($da['vcLongitudeNew'] != 'null') ? $da['vcLongitudeNew'] : null, ($da['telepon'] != 'null') ? $da['telepon'] : null, ($da['alamat'] != 'null') ? $da['alamat'] : null, $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['lValidLokasi'], $foto, $da['dTglCatat'],  $periode, $row['id']));
 			} else {
 				$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?,telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ?";
 				$this->db->query($sql, array(($da['vcLatitudeNew'] != 'null') ? $da['vcLatitudeNew'] : null, ($da['vcLongitudeNew'] != 'null') ? $da['vcLongitudeNew'] : null, ($da['telepon'] != 'null') ? $da['telepon'] : null, ($da['alamat'] != 'null') ? $da['alamat'] : null, $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], $foto, $da['dTglCatat'],  $periode, $row['id']));
+
+				$statusPengaduan = ["METER AIR TERTIMBUN", "METER AIR TERBALIK", "METER AIR MATI", "METER AIR RUSAK", "POSISI METER AIR SULIT", "METER AIR TIDAK ADA"];
+				if (in_array($da['cKetWM'], $statusPengaduan)) {
+					$dataPengaduan = array(
+						'cKdAduan' => $this->autonoumberAduan(),
+						'cKdUser' => 1,
+						'dTglMulaiInput' => date('Y-m-d H:i:s'),
+						'dTglSelesaiInput' => date('Y-m-d H:i:s'),
+						'cIdPel' => $da['cIdPel'],
+						'cNama' => $da['vcNmPel'],
+						'cAlamat' => $da['vcAlamat'],
+						'cKontak' => $da['cNoTelp'],
+						'cKdJenis' => ($da['cKetWM'] == "METER AIR TERTIMBUN" || $da['cKetWM'] == "POSISI METER AIR SULIT") ? "35" : (($da['cKetWM'] == "METER AIR TERBALIK") ? "21" : (($da['cKetWM'] == "METER AIR MATI") ? "05" : (($da['cKetWM'] == "METER AIR RUSAK") ? "04" : "15"))),
+						'cKdWilayah' => $this->getWilayahFromDesa($da['vcWilayah']),
+						'cIsiPengaduan' => 'APLIKASI BACAMETER : ' . $da['cKetWM']
+					);
+					$this->db->insert('pengaduan.tt_aduan', $dataPengaduan);
+				}
 			}
 		}
 		$this->db->trans_complete();
 		if ($this->db->trans_status())
 			return true;
 		return false;
+	}
+
+	public function addDataPengaduan($data = '')
+	{
+		$this->db->insert('pengaduan.tt_aduan', $data);
 	}
 
 	public function sinkronDataV3($data, $id)

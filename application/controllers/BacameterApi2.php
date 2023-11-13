@@ -21,7 +21,7 @@ class BacameterApi2 extends REST_Controller
 
     public function index_get()
     {
-        return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 2.0.01 (connected with Aplikasi Pelayanan, tes auto pull ? )', 'cBlth' => date('m/Y'), 'host' => $this->db->hostname, 'db' => $this->db->database, "php" => phpversion()));
+        return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 2.1.0 (connected with Aplikasi Pengaduan)', 'cBlth' => date('m/Y'), 'host' => $this->db->hostname, 'db' => $this->db->database, "php" => phpversion()));
     }
 
     public function bacameter_get($cIdPembaca)
@@ -56,6 +56,7 @@ class BacameterApi2 extends REST_Controller
         $data = $this->api->getStatus();
         $this->response($data);
     }
+
 
     function jumbacaan_get($id)
     {
