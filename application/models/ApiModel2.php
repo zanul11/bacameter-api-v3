@@ -369,7 +369,6 @@ class ApiModel2 extends CI_Model
 		$cBlth = date('m_Y/');
 		$this->db->trans_begin();
 
-
 		foreach ($data as $da) {
 			// return substr($da['txtFoto'], -27);
 			$foto = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
@@ -389,20 +388,23 @@ class ApiModel2 extends CI_Model
 
 				$statusPengaduan = ["METER AIR TERTIMBUN", "METER AIR TERBALIK", "METER AIR MATI", "METER AIR RUSAK", "POSISI METER AIR SULIT", "METER AIR TIDAK ADA"];
 				if (in_array($da['cKetWM'], $statusPengaduan)) {
-					$dataPengaduan = array(
-						'cKdAduan' => $this->autonoumberAduan(),
-						'cKdUser' => 1,
-						'dTglMulaiInput' => date('Y-m-d H:i:s'),
-						'dTglSelesaiInput' => date('Y-m-d H:i:s'),
-						'cIdPel' => $da['cIdPel'],
-						'cNama' => $da['vcNmPel'],
-						'cAlamat' => $da['vcAlamat'],
-						'cKontak' => $da['cNoTelp'],
-						'cKdJenis' => ($da['cKetWM'] == "METER AIR TERTIMBUN" || $da['cKetWM'] == "POSISI METER AIR SULIT") ? "35" : (($da['cKetWM'] == "METER AIR TERBALIK") ? "21" : (($da['cKetWM'] == "METER AIR MATI") ? "05" : (($da['cKetWM'] == "METER AIR RUSAK") ? "04" : "15"))),
-						'cKdWilayah' => $this->getWilayahFromDesa($da['vcWilayah']),
-						'cIsiPengaduan' => 'APLIKASI BACAMETER : ' . $da['cKetWM']
-					);
-					$this->db->insert('pengaduan.tt_aduan', $dataPengaduan);
+					$cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND cIsiPengaduan LIKE 'APLIKASI BACAMETER%' AND YEAR(dTglMulaiInput) = ? AND MONTH(dTglMulaiInput) = ?", array($da['cIdPel'], date('Y'), date('m')));
+					if ($cek_pengaduan->num_rows() == 0) {
+						$dataPengaduan = array(
+							'cKdAduan' => $this->autonoumberAduan(),
+							'cKdUser' => 1,
+							'dTglMulaiInput' => date('Y-m-d H:i:s'),
+							'dTglSelesaiInput' => date('Y-m-d H:i:s'),
+							'cIdPel' => $da['cIdPel'],
+							'cNama' => $da['vcNmPel'],
+							'cAlamat' => $da['vcAlamat'],
+							'cKontak' => $da['cNoTelp'],
+							'cKdJenis' => ($da['cKetWM'] == "METER AIR TERTIMBUN" || $da['cKetWM'] == "POSISI METER AIR SULIT") ? "35" : (($da['cKetWM'] == "METER AIR TERBALIK") ? "21" : (($da['cKetWM'] == "METER AIR MATI") ? "05" : (($da['cKetWM'] == "METER AIR RUSAK") ? "04" : "15"))),
+							'cKdWilayah' => $this->getWilayahFromDesa($da['vcWilayah']),
+							'cIsiPengaduan' => 'APLIKASI BACAMETER : ' . $da['cKetWM']
+						);
+						$this->db->insert('pengaduan.tt_aduan', $dataPengaduan);
+					}
 				}
 			}
 		}
