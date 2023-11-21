@@ -354,21 +354,21 @@ class ApiModel2 extends CI_Model
 		return $v_kdaduan;
 	}
 
-	public function getWilayahFromDesa($desa)
+	public function getWilayahFromIdPel($id)
 	{
 		$this->db->limit(1);
-		$this->db->select('kelurahan.id_kecamatan AS id');
-		$this->db->from('pelayanan.kelurahan');
-		$this->db->where('kelurahan.nama', $desa);
+		$this->db->select('vw_pelanggan.id_kecamatan AS id');
+		$this->db->from('pelayanan.vw_pelanggan');
+		$this->db->where('vw_pelanggan.no_langganan', $id);
 		$query = $this->db->get();
 		return $query->result()[0]->id;
 	}
+
 	public function updateDataV3($data, $id)
 	{
 		$periode = date('Y-m-') . '01';
 		$cBlth = date('m_Y/');
 		$this->db->trans_begin();
-
 		foreach ($data as $da) {
 			// return substr($da['txtFoto'], -27);
 			$foto = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
@@ -400,7 +400,7 @@ class ApiModel2 extends CI_Model
 							'cAlamat' => $da['vcAlamat'],
 							'cKontak' => $da['cNoTelp'],
 							'cKdJenis' => ($da['cKetWM'] == "METER AIR TERTIMBUN" || $da['cKetWM'] == "POSISI METER AIR SULIT") ? "35" : (($da['cKetWM'] == "METER AIR TERBALIK") ? "21" : (($da['cKetWM'] == "METER AIR MATI") ? "05" : (($da['cKetWM'] == "METER AIR RUSAK") ? "04" : "15"))),
-							'cKdWilayah' => $this->getWilayahFromDesa($da['vcWilayah']),
+							'cKdWilayah' => $this->getWilayahFromIdPel($da['cIdPel']),
 							'cIsiPengaduan' => 'APLIKASI BACAMETER : ' . $da['cKetWM']
 						);
 						$this->db->insert('pengaduan.tt_aduan', $dataPengaduan);
