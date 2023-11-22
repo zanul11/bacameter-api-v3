@@ -327,7 +327,7 @@ class ApiModel2 extends CI_Model
 	public function autonoumberAduan()
 	{
 		$this->db->limit(1);
-		$this->db->order_by('dTglSelesaiInput', 'DESC');
+		$this->db->order_by('id', 'DESC');
 		$qry = $this->db->get('pengaduan.tt_aduan');
 		$rs = $qry->result();
 		$nr = $qry->num_rows();
