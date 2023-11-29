@@ -5,7 +5,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 /** @noinspection PhpIncludeInspection */
 require APPPATH . '/libraries/REST_Controller.php';
+require './vendor/autoload.php';
 
+use Aws\S3\S3Client;
 // use namespace
 use Restserver\Libraries\REST_Controller;
 
@@ -19,6 +21,63 @@ class BacameterApi2 extends REST_Controller
         $this->load->model('ApiModel2', 'api');
     }
 
+
+    public function uploadS3_post()
+    {
+
+        $region = 'id-mtr-666';
+        $version = 'latest';
+        $acces_key_id = 'zanul';
+        $secret_access_id = 'zanulAMGMid';
+        $bucket = 'amgm-bin';
+        $response = array();
+        if (isset($_FILES["file"])) {
+            $getName = $_FILES["file"]["name"];
+            $ext = pathinfo($getName, PATHINFO_EXTENSION);
+            $file_tmp_src = $_FILES["file"]["tmp_name"];
+            if (is_uploaded_file($file_tmp_src)) {
+                $s3 = new S3Client([
+                    'region' => $region,
+                    'version' => $version,
+                    "endpoint" => "http://10.10.222.226:8814",
+                    "use_path_style_endpoint" => true,
+                    'credentials' => [
+                        'key' => $acces_key_id,
+                        'secret' => $secret_access_id
+                    ]
+                ]);
+                try {
+                    $result =  $s3->putObject([
+                        'Bucket' => $bucket,
+                        'Key' => 'bacameter/tes_aws/' . $this->post('nama') . '.' . $ext,
+                        'SourceFile' => $file_tmp_src
+                    ]);
+                    $result_arr = $result->toArray();
+                    if (!empty($result_arr['ObjectURL'])) {
+                        $s3_file_link = $result_arr['ObjectURL'];
+                    } else {
+                        $api_error = 'Upload Failed! S3 link not found!';
+                    }
+                } catch (Aws\S3\Exception\S3Exception $e) {
+                    $api_error = $e->getMessage();
+                }
+                if (empty($api_error)) {
+                    $success = true;
+                    $message = "Successfully Uploaded with " . $s3_file_link;
+                } else {
+                    $success = false;
+                    $message = $api_error;
+                }
+            } else {
+                $success = false;
+                $message = "Error while uploading";
+            }
+        }
+        $response["success"] = $success;
+        $response["message"] = $message;
+        // echo json_encode($response);
+        return $this->response($response);
+    }
     public function index_get()
     {
         return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 2.1.0 (connected with Aplikasi Pengaduan, select from vw_pelanggan)', 'cBlth' => date('m/Y'), 'host' => $this->db->hostname, 'db' => $this->db->database, "php" => phpversion()));
