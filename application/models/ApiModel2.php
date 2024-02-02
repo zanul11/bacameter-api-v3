@@ -389,7 +389,8 @@ class ApiModel2 extends CI_Model
 				$statusPengaduan = ["METER AIR TERTIMBUN", "METER AIR TERBALIK", "METER AIR MATI", "METER AIR RUSAK", "POSISI METER AIR SULIT", "METER AIR TIDAK ADA"];
 				if (in_array($da['cKetWM'], $statusPengaduan)) {
 					// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND cIsiPengaduan LIKE 'APLIKASI BACAMETER%' AND YEAR(dTglMulaiInput) = ? AND MONTH(dTglMulaiInput) = ?", array($da['cIdPel'], date('Y'), date('m')));
-					$cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ?  AND DATE_FORMAT(dTglMulaiInput, '%Y-%m') = ?", array($da['cIdPel'], date('Y-m')));
+					// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND DATE_FORMAT(dTglMulaiInput, '%Y-%m') = ?", array($da['cIdPel'], date('Y-m')));
+					$cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND cIsiPengaduan = ?", array($da['cIdPel'], 'APLIKASI BACAMETER : ' . $da['cKetWM']));
 					if ($cek_pengaduan->num_rows() == 0) {
 						$dataPengaduan = array(
 							'cKdAduan' => $this->autonoumberAduan(),
@@ -417,7 +418,10 @@ class ApiModel2 extends CI_Model
 	}
 
 	public function cekPengaduan(){
-		$cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ?  AND DATE_FORMAT(dTglMulaiInput, '%Y-%m') = ?", array('09-11-00002', date('Y-m')));
+		$da = 'METER AIR TIDAK ADA';
+		// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ?  AND DATE_FORMAT(dTglMulaiInput, '%Y-%m') = ?", array('09-11-00002', date('Y-m')));
+		// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND cIsiPengaduan = ?", array('09-11-00002', 'APLIKASI BACAMETER : METER AIR TIDAK ADA'));
+		$cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND cIsiPengaduans = ?", array('09-11-00002', 'APLIKASI BACAMETER : ' . $da));
 		return $cek_pengaduan->num_rows();
 	}
 
