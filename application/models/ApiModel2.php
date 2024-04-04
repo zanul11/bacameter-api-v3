@@ -388,6 +388,7 @@ class ApiModel2 extends CI_Model
 
 				$statusPengaduan = ["METER AIR TERTIMBUN", "METER AIR TERBALIK", "METER AIR MATI", "METER AIR RUSAK", "POSISI METER AIR SULIT", "METER AIR TIDAK ADA"];
 				if (in_array($da['cKetWM'], $statusPengaduan)) {
+					
 					// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND cIsiPengaduan LIKE 'APLIKASI BACAMETER%' AND YEAR(dTglMulaiInput) = ? AND MONTH(dTglMulaiInput) = ?", array($da['cIdPel'], date('Y'), date('m')));
 					// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND DATE_FORMAT(dTglMulaiInput, '%Y-%m') = ?", array($da['cIdPel'], date('Y-m')));
 					$cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND cIsiPengaduan = ?", array($da['cIdPel'], 'APLIKASI BACAMETER : ' . $da['cKetWM']));
