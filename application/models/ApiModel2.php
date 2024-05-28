@@ -387,28 +387,28 @@ class ApiModel2 extends CI_Model
 				$this->db->query($sql, array(($da['vcLatitudeNew'] != 'null') ? $da['vcLatitudeNew'] : null, ($da['vcLongitudeNew'] != 'null') ? $da['vcLongitudeNew'] : null, ($da['telepon'] != 'null') ? $da['telepon'] : null, ($da['alamat'] != 'null') ? $da['alamat'] : null, $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], $foto, $da['dTglCatat'],  $periode, $row['id']));
 
 				$statusPengaduan = ["METER AIR TERTIMBUN", "METER AIR TERBALIK", "METER AIR MATI", "METER AIR RUSAK", "POSISI METER AIR SULIT", "METER AIR TIDAK ADA"];
-				if (in_array($da['cKetWM'], $statusPengaduan)) {
+				// if (in_array($da['cKetWM'], $statusPengaduan)) {
 					
-					// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND cIsiPengaduan LIKE 'APLIKASI BACAMETER%' AND YEAR(dTglMulaiInput) = ? AND MONTH(dTglMulaiInput) = ?", array($da['cIdPel'], date('Y'), date('m')));
-					// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND DATE_FORMAT(dTglMulaiInput, '%Y-%m') = ?", array($da['cIdPel'], date('Y-m')));
-					$cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND cIsiPengaduan = ?", array($da['cIdPel'], 'APLIKASI BACAMETER : ' . $da['cKetWM']));
-					if ($cek_pengaduan->num_rows() == 0) {
-						$dataPengaduan = array(
-							'cKdAduan' => $this->autonoumberAduan(),
-							'cKdUser' => 1,
-							'dTglMulaiInput' => date('Y-m-d H:i:s'),
-							'dTglSelesaiInput' => date('Y-m-d H:i:s'),
-							'cIdPel' => $da['cIdPel'],
-							'cNama' => $da['vcNmPel'],
-							'cAlamat' => $da['vcAlamat'],
-							'cKontak' => $da['cNoTelp'],
-							'cKdJenis' => ($da['cKetWM'] == "METER AIR TERTIMBUN" || $da['cKetWM'] == "POSISI METER AIR SULIT") ? "35" : (($da['cKetWM'] == "METER AIR TERBALIK") ? "21" : (($da['cKetWM'] == "METER AIR MATI") ? "05" : (($da['cKetWM'] == "METER AIR RUSAK") ? "04" : "15"))),
-							'cKdWilayah' => $this->getWilayahFromIdPel($da['cIdPel']),
-							'cIsiPengaduan' => 'APLIKASI BACAMETER : ' . $da['cKetWM']
-						);
-						$this->db->insert('pengaduan.tt_aduan', $dataPengaduan);
-					}
-				}
+				// 	// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND cIsiPengaduan LIKE 'APLIKASI BACAMETER%' AND YEAR(dTglMulaiInput) = ? AND MONTH(dTglMulaiInput) = ?", array($da['cIdPel'], date('Y'), date('m')));
+				// 	// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND DATE_FORMAT(dTglMulaiInput, '%Y-%m') = ?", array($da['cIdPel'], date('Y-m')));
+				// 	$cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND cIsiPengaduan = ?", array($da['cIdPel'], 'APLIKASI BACAMETER : ' . $da['cKetWM']));
+				// 	if ($cek_pengaduan->num_rows() == 0) {
+				// 		$dataPengaduan = array(
+				// 			'cKdAduan' => $this->autonoumberAduan(),
+				// 			'cKdUser' => 1,
+				// 			'dTglMulaiInput' => date('Y-m-d H:i:s'),
+				// 			'dTglSelesaiInput' => date('Y-m-d H:i:s'),
+				// 			'cIdPel' => $da['cIdPel'],
+				// 			'cNama' => $da['vcNmPel'],
+				// 			'cAlamat' => $da['vcAlamat'],
+				// 			'cKontak' => $da['cNoTelp'],
+				// 			'cKdJenis' => ($da['cKetWM'] == "METER AIR TERTIMBUN" || $da['cKetWM'] == "POSISI METER AIR SULIT") ? "35" : (($da['cKetWM'] == "METER AIR TERBALIK") ? "21" : (($da['cKetWM'] == "METER AIR MATI") ? "05" : (($da['cKetWM'] == "METER AIR RUSAK") ? "04" : "15"))),
+				// 			'cKdWilayah' => $this->getWilayahFromIdPel($da['cIdPel']),
+				// 			'cIsiPengaduan' => 'APLIKASI BACAMETER : ' . $da['cKetWM']
+				// 		);
+				// 		$this->db->insert('pengaduan.tt_aduan', $dataPengaduan);
+				// 	}
+				// }
 			}
 		}
 		$this->db->trans_complete();
