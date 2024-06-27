@@ -163,6 +163,7 @@ class BacameterApi2 extends REST_Controller
 
     public function rumahkonci_get($id, $status)
     {
+      
         $data = $this->api->getRumahKonci($id, $status);
         $this->response(array('data' => $data));
     }

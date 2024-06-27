@@ -217,6 +217,7 @@ class ApiModel2 extends CI_Model
 	public function getRumahKonci($id, $status)
 	{
 		$periode = date('Y-m-') . '01';
+		$status = strtoupper(str_replace('%20', ' ',$status));
 		$sql = "SELECT p.no_langganan FROM pelayanan.baca_meter b JOIN pelayanan.pelanggan p ON b.id_pelanggan=p.id where periode = ? AND b.id_pembaca=? AND b.status_baca=?";
 		$query = $this->db->query($sql, array($periode, $id, $status));
 		return $query->result_array();
