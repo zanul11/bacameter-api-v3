@@ -161,9 +161,9 @@ class BacameterApi2 extends REST_Controller
         $this->response(array('bacaan' => $bacaan, 'belum_terbaca' => $belum_terbaca, 'sudah_terbaca' => $bacaan - $belum_terbaca));
     }
 
-    public function rumahkonci_get($id)
+    public function rumahkonci_get($id, $status)
     {
-        $data = $this->api->getRumahKonci($id);
+        $data = $this->api->getRumahKonci($id, $status);
         $this->response(array('data' => $data));
     }
 
