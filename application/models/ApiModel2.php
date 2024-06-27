@@ -214,6 +214,14 @@ class ApiModel2 extends CI_Model
 		return $query->row()->jum;
 	}
 
+	public function getRumahKonci($id)
+	{
+		$periode = date('Y-m-') . '01';
+		$sql = "SELECT p.no_langganan FROM pelayanan.baca_meter b JOIN pelayanan.pelanggan p ON b.id_pelanggan=p.id where periode = ? AND id_pembaca=? AND status_baca='RUMAH TERKONCI'";
+		$query = $this->db->query($sql, array($periode, $id));
+		return $query->result_array();
+	}
+
 	public function getJumBelumBacaan($id)
 	{
 		$periode = date('Y-m-') . '01';

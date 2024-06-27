@@ -81,7 +81,7 @@ class BacameterApi2 extends REST_Controller
     public function index_get()
     {
         // return $this->response(array('data'=>$this->api->cekPengaduan()));
-        return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 2.3.0 (connected with Aplikasi Pengaduan, matikan insert pengaduan)', 'cBlth' => date('m/Y'), 'host' => $this->db->hostname, 'db' => $this->db->database, "php" => phpversion()));
+        return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 2.3.0 (connected with Aplikasi Pengaduan, get rumah konci by id)', 'cBlth' => date('m/Y'), 'host' => $this->db->hostname, 'db' => $this->db->database, "php" => phpversion()));
     }
 
     public function bacameter_get($cIdPembaca)
@@ -159,6 +159,12 @@ class BacameterApi2 extends REST_Controller
         $bacaan = (int)$this->api->getJumBacaan($id);
         $belum_terbaca = (int)$this->api->getJumBelumBacaan($id);
         $this->response(array('bacaan' => $bacaan, 'belum_terbaca' => $belum_terbaca, 'sudah_terbaca' => $bacaan - $belum_terbaca));
+    }
+
+    public function rumahkonci_get($id)
+    {
+        $data = (int)$this->api->getRumahKonci($id);
+        $this->response(array('data' => $data));
     }
 
     public function version_get()
