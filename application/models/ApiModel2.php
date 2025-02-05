@@ -127,7 +127,7 @@ class ApiModel2 extends CI_Model
 
 	public function getRekening($id)
 	{
-		$sql = "SELECT gol.denda as denda,rekening.periode,rekening.harga_air+rekening.biaya_retribusi+rekening.biaya_jasa_lingkungan+rekening.biaya_pemeliharaan+rekening.biaya_administrasi+rekening.biaya_materai+rekening.biaya_ppn-rekening.diskon as total from pelayanan.rekening_air as rekening, pelayanan.golongan as gol where id_pelanggan=? AND kasir is NULL AND waktu_bayar IS NULL AND rekening.id_golongan=gol.id";
+		$sql = "SELECT biaya_denda as denda,rekening.periode,rekening.harga_air+rekening.biaya_retribusi+rekening.biaya_jasa_lingkungan+rekening.biaya_pemeliharaan+rekening.biaya_administrasi+rekening.biaya_materai+rekening.biaya_ppn-rekening.diskon as total from pelayanan.rekening_air as rekening, pelayanan.golongan as gol where id_pelanggan=? AND kasir is NULL AND waktu_bayar IS NULL AND rekening.id_golongan=gol.id";
 		$query = $this->db->query($sql, array($id));
 		$records = array();
 		foreach ($query->result_array() as $r) {
