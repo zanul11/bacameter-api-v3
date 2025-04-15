@@ -391,11 +391,18 @@ class ApiModel2 extends CI_Model
 			if ($da['cKetWM'] == null) {
 				$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?,telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND (status_baca != 'BACAMETER MANDIRI' OR status_baca IS NULL)";
 				$this->db->query($sql, array(($da['vcLatitudeNew'] != 'null') ? $da['vcLatitudeNew'] : null, ($da['vcLongitudeNew'] != 'null') ? $da['vcLongitudeNew'] : null, ($da['telepon'] != 'null') ? $da['telepon'] : null, ($da['alamat'] != 'null') ? $da['alamat'] : null, $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['lValidLokasi'], $foto, $da['dTglCatat'],  $periode, $row['id']));
+
+				$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ? WHERE id = ?";
+				$this->db->query($sql_pelanggan, array($da['telepon'], $row['id']));
 			} else {
 				$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?,telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND (status_baca != 'BACAMETER MANDIRI' OR status_baca IS NULL)";
 				$this->db->query($sql, array(($da['vcLatitudeNew'] != 'null') ? $da['vcLatitudeNew'] : null, ($da['vcLongitudeNew'] != 'null') ? $da['vcLongitudeNew'] : null, ($da['telepon'] != 'null') ? $da['telepon'] : null, ($da['alamat'] != 'null') ? $da['alamat'] : null, $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], $foto, $da['dTglCatat'],  $periode, $row['id']));
 
-				$statusPengaduan = ["METER AIR TERTIMBUN", "METER AIR TERBALIK", "METER AIR MATI", "METER AIR RUSAK", "POSISI METER AIR SULIT", "METER AIR TIDAK ADA"];
+				$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ? WHERE id = ?";
+				$this->db->query($sql_pelanggan, array($da['telepon'], $row['id']));
+
+
+				// $statusPengaduan = ["METER AIR TERTIMBUN", "METER AIR TERBALIK", "METER AIR MATI", "METER AIR RUSAK", "POSISI METER AIR SULIT", "METER AIR TIDAK ADA"];
 				// if (in_array($da['cKetWM'], $statusPengaduan)) {
 					
 				// 	// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND cIsiPengaduan LIKE 'APLIKASI BACAMETER%' AND YEAR(dTglMulaiInput) = ? AND MONTH(dTglMulaiInput) = ?", array($da['cIdPel'], date('Y'), date('m')));
