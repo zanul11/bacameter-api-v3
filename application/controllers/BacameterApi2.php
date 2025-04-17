@@ -90,7 +90,7 @@ class BacameterApi2 extends REST_Controller
         $this->response($data);
     }
 
-    public function water_meter_get($cIdPembaca)
+    public function water_meter_get()
     {
         $data = $this->api->getWaterMeter();
         $this->response($data);
