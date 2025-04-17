@@ -101,7 +101,7 @@ class ApiModel2 extends CI_Model
 		baca.status_baca as cKetWm,
 		baca.latitude as vcLatitude,baca.longitude as vcLongitude,baca.foto as txtFoto,
 		null as vcLatitudeNew,null as vcLongitudeNew, baca.valid_koordinat as lValidLokasi,
-		wm.id waterMeterId, wm.merk waterMeterMerk from 
+		wm.id waterMeterId, wm.merk waterMeterMerk, pel.no_body_water_meter waterMeterNomor from 
 		pelayanan.baca_meter as baca, pelayanan.pelanggan as pel, pelayanan.jalan as jln, pelayanan.kelurahan as lurah , pelayanan.golongan as gol,
 		pelayanan.water_meter wm
 		WHERE baca.id_pelanggan=pel.id AND pel.id_jalan=jln.id
