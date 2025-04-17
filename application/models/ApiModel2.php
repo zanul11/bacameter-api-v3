@@ -150,6 +150,15 @@ class ApiModel2 extends CI_Model
 		return $records;
 	}
 
+	public function getWaterMeter()
+	{
+		$sql = "SELECT id, merk from pelayanan.water_meter";
+		$query = $this->db->query($sql);
+		$records = array();
+		$records = $query->result_array();
+		return $records;
+	}
+
 	public function getStatus()
 	{
 		$sql = "SELECT CAST(id AS NCHAR) as cKode, keterangan as cKet, 1 as status, input_angka as inputAngka FROM pelayanan.status_baca WHERE deleted_at IS NULL";
