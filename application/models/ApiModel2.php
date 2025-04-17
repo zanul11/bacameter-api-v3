@@ -100,10 +100,13 @@ class ApiModel2 extends CI_Model
 	
 		baca.status_baca as cKetWm,
 		baca.latitude as vcLatitude,baca.longitude as vcLongitude,baca.foto as txtFoto,
-		null as vcLatitudeNew,null as vcLongitudeNew, baca.valid_koordinat as lValidLokasi from 
+		null as vcLatitudeNew,null as vcLongitudeNew, baca.valid_koordinat as lValidLokasi,
+		wm.id water_meter_id, wm.merk water_meter_merk from 
 		pelayanan.baca_meter as baca, pelayanan.pelanggan as pel, pelayanan.jalan as jln, pelayanan.kelurahan as lurah , pelayanan.golongan as gol
+		pelayanan.water_meter wm
 		WHERE baca.id_pelanggan=pel.id AND pel.id_jalan=jln.id
 		AND jln.id_kelurahan=lurah.id AND pel.id_golongan=gol.id AND
+		AND pel.id_water_meter = wm.id AND
 		baca.periode = ? AND baca.id_pembaca = ?";
 		$query = $this->db->query($sql, array($blnLalu1, $blnLalu2, $blnLalu3,  $periode, $idbaca));
 
