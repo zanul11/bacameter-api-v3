@@ -467,7 +467,7 @@ class ApiModel2 extends CI_Model
 				$this->db->query($sql_pelanggan, array($da['telepon'], $row['id']));
 
 
-				if($da['cNoTelp'] != $da['telepon'] || $da['waterMeterId'] != $row['id_water_meter']){ {
+				if($da['cNoTelp'] != $da['telepon'] || $da['waterMeterId'] != $row['id_water_meter']){ 
 					$data_awal = "Nama : " . $row['nama'] .
 					"<br>Alamat : " . $row['alamat'] .
 					"<br>No Hp : " . $row['telepon'].
@@ -499,14 +499,7 @@ class ApiModel2 extends CI_Model
 		return false;
 	}
 
-	public function cekPengaduan()
-	{
-		$da = 'METER AIR TIDAK ADA';
-		// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ?  AND DATE_FORMAT(dTglMulaiInput, '%Y-%m') = ?", array('09-11-00002', date('Y-m')));
-		// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND cIsiPengaduan = ?", array('09-11-00002', 'APLIKASI BACAMETER : METER AIR TIDAK ADA'));
-		$cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND cIsiPengaduans = ?", array('09-11-00002', 'APLIKASI BACAMETER : ' . $da));
-		return $cek_pengaduan->num_rows();
-	}
+
 
 	public function addDataPengaduan($data = '')
 	{
