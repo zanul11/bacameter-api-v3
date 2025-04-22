@@ -229,7 +229,7 @@ class ApiModel2 extends CI_Model
 	public function getRumahKonci($id, $status)
 	{
 		$periode = date('Y-m-') . '01';
-		$status = strtoupper(str_replace('%20', ' ',$status));
+		$status = strtoupper(str_replace('%20', ' ', $status));
 		$sql = "SELECT p.no_langganan FROM pelayanan.baca_meter b JOIN pelayanan.pelanggan p ON b.id_pelanggan=p.id where periode = ? AND b.id_pembaca=? AND b.status_baca=?";
 		$query = $this->db->query($sql, array($periode, $id, $status));
 		return $query->result_array();
@@ -412,41 +412,95 @@ class ApiModel2 extends CI_Model
 
 				$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ? WHERE id = ?";
 				$this->db->query($sql_pelanggan, array($da['telepon'], $row['id']));
-
-
-				// $statusPengaduan = ["METER AIR TERTIMBUN", "METER AIR TERBALIK", "METER AIR MATI", "METER AIR RUSAK", "POSISI METER AIR SULIT", "METER AIR TIDAK ADA"];
-				// if (in_array($da['cKetWM'], $statusPengaduan)) {
-					
-				// 	// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND cIsiPengaduan LIKE 'APLIKASI BACAMETER%' AND YEAR(dTglMulaiInput) = ? AND MONTH(dTglMulaiInput) = ?", array($da['cIdPel'], date('Y'), date('m')));
-				// 	// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND DATE_FORMAT(dTglMulaiInput, '%Y-%m') = ?", array($da['cIdPel'], date('Y-m')));
-				// 	$cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND cIsiPengaduan = ?", array($da['cIdPel'], 'APLIKASI BACAMETER : ' . $da['cKetWM']));
-				// 	if ($cek_pengaduan->num_rows() == 0) {
-				// 		$dataPengaduan = array(
-				// 			'cKdAduan' => $this->autonoumberAduan(),
-				// 			'cKdUser' => 1,
-				// 			'dTglMulaiInput' => date('Y-m-d H:i:s'),
-				// 			'dTglSelesaiInput' => date('Y-m-d H:i:s'),
-				// 			'cIdPel' => $da['cIdPel'],
-				// 			'cNama' => $da['vcNmPel'],
-				// 			'cAlamat' => $da['vcAlamat'],
-				// 			'cKontak' => $da['cNoTelp'],
-				// 			'cKdJenis' => ($da['cKetWM'] == "METER AIR TERTIMBUN" || $da['cKetWM'] == "POSISI METER AIR SULIT") ? "35" : (($da['cKetWM'] == "METER AIR TERBALIK") ? "21" : (($da['cKetWM'] == "METER AIR MATI") ? "05" : (($da['cKetWM'] == "METER AIR RUSAK") ? "04" : "15"))),
-				// 			'cKdWilayah' => $this->getWilayahFromIdPel($da['cIdPel']),
-				// 			'cIsiPengaduan' => 'APLIKASI BACAMETER : ' . $da['cKetWM']
-				// 		);
-				// 		$this->db->insert('pengaduan.tt_aduan', $dataPengaduan);
-				// 	}
-				// }
 			}
 		}
 		$this->db->trans_complete();
 		if ($this->db->trans_status())
 			return true;
 		return false;
-		
 	}
 
-	public function cekPengaduan(){
+	function getKeteranganPerubahan($noHpPelanggan, $noHpUpload, $wmPelanggan, $wmUpload) {
+		$keterangan = [];
+	
+		if ($noHpPelanggan !== $noHpUpload) {
+			$keterangan[] = 'no_hp';
+		}
+	
+		if ($wmPelanggan !== $wmUpload) {
+			$keterangan[] = 'watermeter_id';
+		}
+	
+		if (empty($keterangan)) {
+			return '-';
+		}
+	
+		return 'Update ' . implode(' dan ', $keterangan);
+	}
+
+	public function updateDataV4($data, $id)
+	{
+		$periode = date('Y-m-') . '01';
+		$cBlth = date('m_Y/');
+		$this->db->trans_begin();
+		foreach ($data as $da) {
+			// return substr($da['txtFoto'], -27);
+			$foto = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
+			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
+			$row = $query->row_array();
+			$name_foto_survey = null;
+			if ($da['txtFotoSurvey'] != null) {
+				$name_foto_survey = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFotoSurvey'];
+			}
+
+			if ($da['cKetWM'] == null) {
+				$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?,telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND (status_baca != 'BACAMETER MANDIRI' OR status_baca IS NULL)";
+				$this->db->query($sql, array(($da['vcLatitudeNew'] != 'null') ? $da['vcLatitudeNew'] : null, ($da['vcLongitudeNew'] != 'null') ? $da['vcLongitudeNew'] : null, ($da['telepon'] != 'null') ? $da['telepon'] : null, ($da['alamat'] != 'null') ? $da['alamat'] : null, $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['lValidLokasi'], $foto, $da['dTglCatat'],  $periode, $row['id']));
+
+				$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ? WHERE id = ?";
+				$this->db->query($sql_pelanggan, array($da['telepon'], $row['id']));
+			} else {
+				$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?,telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND (status_baca != 'BACAMETER MANDIRI' OR status_baca IS NULL)";
+				$this->db->query($sql, array(($da['vcLatitudeNew'] != 'null') ? $da['vcLatitudeNew'] : null, ($da['vcLongitudeNew'] != 'null') ? $da['vcLongitudeNew'] : null, ($da['telepon'] != 'null') ? $da['telepon'] : null, ($da['alamat'] != 'null') ? $da['alamat'] : null, $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], $foto, $da['dTglCatat'],  $periode, $row['id']));
+
+				$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ? WHERE id = ?";
+				$this->db->query($sql_pelanggan, array($da['telepon'], $row['id']));
+
+
+				if($da['cNoTelp'] != $da['telepon'] || $da['waterMeterId'] != $row['id_water_meter']){ {
+					$data_awal = "Nama : " . $row['nama'] .
+					"<br>Alamat : " . $row['alamat'] .
+					"<br>No Hp : " . $row['telepon'].
+					"<br>Water Meter : " . $row['id_water_meter'];
+
+					$data_akhir = "Nama : " . $da['vcNama'] .
+						"<br>Alamat : " . $da['alamat'] .
+						"<br>No Hp : " . $da['telepon'].
+						"<br>Water Meter : " . $da['waterMeterId'];
+
+					$data_log_pelanggan = [
+						'id_transaksi' => null,
+						'id_pelanggan' => $row['id'],
+						'data_awal'    => $data_awal,
+						'data_akhir'   => $data_akhir,
+						'keterangan'   => $this->getKeteranganPerubahan($row['telepon'], $da['cNoTelp'], $row['id_water_meter'], $da['waterMeterId']),
+						'aksi'         => "Ganti Profil",
+						'operator'     => $id,
+					];
+
+					$this->db->insert('log_pelanggan', $data);
+				}
+				
+			}
+		}
+		$this->db->trans_complete();
+		if ($this->db->trans_status())
+			return true;
+		return false;
+	}
+
+	public function cekPengaduan()
+	{
 		$da = 'METER AIR TIDAK ADA';
 		// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ?  AND DATE_FORMAT(dTglMulaiInput, '%Y-%m') = ?", array('09-11-00002', date('Y-m')));
 		// $cek_pengaduan = $this->db->query("SELECT * FROM pengaduan.tt_aduan WHERE cIdPel = ? AND fStatus = 1 AND cIsiPengaduan = ?", array('09-11-00002', 'APLIKASI BACAMETER : METER AIR TIDAK ADA'));
