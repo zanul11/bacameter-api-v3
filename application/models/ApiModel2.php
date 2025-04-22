@@ -420,7 +420,7 @@ class ApiModel2 extends CI_Model
 		return false;
 	}
 
-	function getKeteranganPerubahan($noHpPelanggan, $noHpUpload, $wmPelanggan, $wmUpload) {
+	public function getKeteranganPerubahan($noHpPelanggan, $noHpUpload, $wmPelanggan, $wmUpload) {
 		$keterangan = [];
 	
 		if ($noHpPelanggan !== $noHpUpload) {
