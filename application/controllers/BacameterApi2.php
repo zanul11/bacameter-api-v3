@@ -81,7 +81,7 @@ class BacameterApi2 extends REST_Controller
     public function index_get()
     {
         // return $this->response(array('data'=>$this->api->cekPengaduan()));
-        return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 2.4.0 (connected with Aplikasi Pengaduan,update upload log pelanggan)', 'cBlth' => date('m/Y')));
+        return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 2.4.0 (connected with Aplikasi Pengaduan,update upload log pelanggan, lef join)', 'cBlth' => date('m/Y')));
     }
 
     public function bacameter_get($cIdPembaca)
