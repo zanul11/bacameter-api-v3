@@ -422,21 +422,22 @@ class ApiModel2 extends CI_Model
 		return false;
 	}
 
-	public function getKeteranganPerubahan($noHpPelanggan, $noHpUpload, $wmPelanggan, $wmUpload) {
+	public function getKeteranganPerubahan($noHpPelanggan, $noHpUpload, $wmPelanggan, $wmUpload)
+	{
 		$keterangan = [];
-	
+
 		if ($noHpPelanggan !== $noHpUpload) {
 			$keterangan[] = 'no_hp';
 		}
-	
+
 		if ($wmPelanggan !== $wmUpload) {
 			$keterangan[] = 'watermeter_id';
 		}
-	
+
 		if (empty($keterangan)) {
 			return '-';
 		}
-	
+
 		return 'Update ' . implode(' dan ', $keterangan);
 	}
 
@@ -459,25 +460,15 @@ class ApiModel2 extends CI_Model
 				$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?,telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND (status_baca != 'BACAMETER MANDIRI' OR status_baca IS NULL)";
 				$this->db->query($sql, array(($da['vcLatitudeNew'] != 'null') ? $da['vcLatitudeNew'] : null, ($da['vcLongitudeNew'] != 'null') ? $da['vcLongitudeNew'] : null, ($da['telepon'] != 'null') ? $da['telepon'] : null, ($da['alamat'] != 'null') ? $da['alamat'] : null, $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['lValidLokasi'], $foto, $da['dTglCatat'],  $periode, $row['id']));
 
-				$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ? WHERE id = ?";
-				$this->db->query($sql_pelanggan, array($da['telepon'], $row['id']));
-			} else {
-				$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?,telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND (status_baca != 'BACAMETER MANDIRI' OR status_baca IS NULL)";
-				$this->db->query($sql, array(($da['vcLatitudeNew'] != 'null') ? $da['vcLatitudeNew'] : null, ($da['vcLongitudeNew'] != 'null') ? $da['vcLongitudeNew'] : null, ($da['telepon'] != 'null') ? $da['telepon'] : null, ($da['alamat'] != 'null') ? $da['alamat'] : null, $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], $foto, $da['dTglCatat'],  $periode, $row['id']));
-
-				$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ? WHERE id = ?";
-				$this->db->query($sql_pelanggan, array($da['telepon'], $row['id']));
-
-
-				if($da['cNoTelp'] != $da['telepon'] || $da['waterMeterId'] != $row['id_water_meter']){ 
+				if ($da['cNoTelp'] != $da['telepon'] || $da['waterMeterId'] != $row['id_water_meter']) {
 					$data_awal = "Nama : " . $row['nama'] .
-					"<br>Alamat : " . $row['alamat'] .
-					"<br>No Hp : " . $row['telepon'].
-					"<br>Water Meter : " . $row['id_water_meter'];
+						"<br>Alamat : " . $row['alamat'] .
+						"<br>No Hp : " . $row['telepon'] .
+						"<br>Water Meter : " . $row['id_water_meter'];
 
 					$data_akhir = "Nama : " . $da['vcNama'] .
 						"<br>Alamat : " . $da['alamat'] .
-						"<br>No Hp : " . $da['telepon'].
+						"<br>No Hp : " . $da['telepon'] .
 						"<br>Water Meter : " . $da['waterMeterId'];
 
 					$data_log_pelanggan = [
@@ -490,9 +481,39 @@ class ApiModel2 extends CI_Model
 						'operator'     => $id,
 					];
 
-					$this->db->insert('log_pelanggan', $data);
+					$this->db->insert('log_pelanggan', $data_log_pelanggan);
+					// $sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ?, id_water_meter = ? WHERE id = ?";
+					// $this->db->query($sql_pelanggan, array($da['telepon'], $da['waterMeterId'], $row['id']));
 				}
-				
+			} else {
+				$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?,telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND (status_baca != 'BACAMETER MANDIRI' OR status_baca IS NULL)";
+				$this->db->query($sql, array(($da['vcLatitudeNew'] != 'null') ? $da['vcLatitudeNew'] : null, ($da['vcLongitudeNew'] != 'null') ? $da['vcLongitudeNew'] : null, ($da['telepon'] != 'null') ? $da['telepon'] : null, ($da['alamat'] != 'null') ? $da['alamat'] : null, $da['cIndikasiKelainan'], $name_foto_survey, $da['cKetSurvey'], $da['nStIni'], $da['nStIni'], $da['nPakai'], $da['cKetWM'], $da['lValidLokasi'], $foto, $da['dTglCatat'],  $periode, $row['id']));
+
+				if ($da['cNoTelp'] != $da['telepon'] || $da['waterMeterId'] != $row['id_water_meter']) {
+					$data_awal = "Nama : " . $row['nama'] .
+						"<br>Alamat : " . $row['alamat'] .
+						"<br>No Hp : " . $row['telepon'] .
+						"<br>Water Meter : " . $row['id_water_meter'];
+
+					$data_akhir = "Nama : " . $da['vcNama'] .
+						"<br>Alamat : " . $da['alamat'] .
+						"<br>No Hp : " . $da['telepon'] .
+						"<br>Water Meter : " . $da['waterMeterId'];
+
+					$data_log_pelanggan = [
+						'id_transaksi' => null,
+						'id_pelanggan' => $row['id'],
+						'data_awal'    => $data_awal,
+						'data_akhir'   => $data_akhir,
+						'keterangan'   => $this->getKeteranganPerubahan($row['telepon'], $da['cNoTelp'], $row['id_water_meter'], $da['waterMeterId']),
+						'aksi'         => "Ganti Profil",
+						'operator'     => $id,
+					];
+
+					$this->db->insert('log_pelanggan', $data_log_pelanggan);
+					// $sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ?, id_water_meter = ? WHERE id = ?";
+					// $this->db->query($sql_pelanggan, array($da['telepon'], $da['waterMeterId'], $row['id']));
+				}
 			}
 		}
 		$this->db->trans_complete();

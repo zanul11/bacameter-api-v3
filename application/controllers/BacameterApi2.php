@@ -81,7 +81,7 @@ class BacameterApi2 extends REST_Controller
     public function index_get()
     {
         // return $this->response(array('data'=>$this->api->cekPengaduan()));
-        return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 2.4.0 (connected with Aplikasi Pengaduan,update upload log pelanggan, lef join)', 'cBlth' => date('m/Y')));
+        return $this->response(array('status' => true, 'message' => 'Api Bacameter versi 2.4.0 (connected with Aplikasi Pengaduan,update upload log pelanggan untuk uji coba)', 'cBlth' => date('m/Y')));
     }
 
     public function bacameter_get($cIdPembaca)
@@ -237,6 +237,19 @@ class BacameterApi2 extends REST_Controller
         $data = json_decode($this->post('data'), true);
         $id = $this->post('id');
         $flag = $this->api->updateDataV3($data, $id);
+        if ($flag) {
+            $this->response(array('status' => true, 'message' => 'data berhasil di upload guys',));
+        } else {
+            $this->response(array('status' => false, 'message' => 'data gagal di upload'));
+        }
+    }
+
+    public function uploadV4_post()
+    {
+        //untuk upload data v4
+        $data = json_decode($this->post('data'), true);
+        $id = $this->post('id');
+        $flag = $this->api->updateDataV4($data, $id);
         if ($flag) {
             $this->response(array('status' => true, 'message' => 'data berhasil di upload guys',));
         } else {
