@@ -450,7 +450,7 @@ class ApiModel2 extends CI_Model
 		foreach ($data as $da) {
 			// return substr($da['txtFoto'], -27);
 			$foto = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
-			$query = $this->db->query("SELECT id, id_water_meter, telepon FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
+			$query = $this->db->query("SELECT id, nama, alamat, id_water_meter, telepon FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
 			$row = $query->row_array();
 			$name_foto_survey = null;
 			if ($da['txtFotoSurvey'] != null) {
