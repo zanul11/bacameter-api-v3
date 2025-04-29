@@ -86,6 +86,7 @@ class ApiModel2 extends CI_Model
 
 	public function getDataBacaanWithRekeningV2($idbaca)
 	{
+		//aktif saat ini
 		$periode = date('Y-m-') . '01';
 		$blnLalu1 = date('Y-m-', strtotime(date('Y-m') . " -1 month")) . '01';
 		$blnLalu2 = date('Y-m-', strtotime(date('Y-m') . " -2 month")) . '01';
@@ -449,7 +450,7 @@ class ApiModel2 extends CI_Model
 		foreach ($data as $da) {
 			// return substr($da['txtFoto'], -27);
 			$foto = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
-			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
+			$query = $this->db->query("SELECT id, id_water_meter FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
 			$row = $query->row_array();
 			$name_foto_survey = null;
 			if ($da['txtFotoSurvey'] != null) {
@@ -482,8 +483,8 @@ class ApiModel2 extends CI_Model
 					];
 
 					$this->db->insert('log_pelanggan', $data_log_pelanggan);
-					// $sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ?, id_water_meter = ? WHERE id = ?";
-					// $this->db->query($sql_pelanggan, array($da['telepon'], $da['waterMeterId'], $row['id']));
+					$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ?, id_water_meter = ? WHERE id = ?";
+					$this->db->query($sql_pelanggan, array($da['telepon'], $da['waterMeterId'], $row['id']));
 				}
 			} else {
 				$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?,telepon = ?, alamat = ?,indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ?, pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND (status_baca != 'BACAMETER MANDIRI' OR status_baca IS NULL)";
@@ -511,8 +512,8 @@ class ApiModel2 extends CI_Model
 					];
 
 					$this->db->insert('log_pelanggan', $data_log_pelanggan);
-					// $sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ?, id_water_meter = ? WHERE id = ?";
-					// $this->db->query($sql_pelanggan, array($da['telepon'], $da['waterMeterId'], $row['id']));
+					$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ?, id_water_meter = ? WHERE id = ?";
+					$this->db->query($sql_pelanggan, array($da['telepon'], $da['waterMeterId'], $row['id']));
 				}
 			}
 		}
