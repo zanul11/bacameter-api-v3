@@ -467,7 +467,7 @@ class ApiModel2 extends CI_Model
 						"<br>No Hp : " . $row['telepon'] .
 						"<br>Water Meter : " . $row['id_water_meter'];
 
-					$data_akhir = "Nama : " . $da['vcNama'] .
+					$data_akhir = "Nama : " . $da['vcNmPel'] .
 						"<br>Alamat : " . $da['alamat'] .
 						"<br>No Hp : " . $da['telepon'] .
 						"<br>Water Meter : " . $da['waterMeterId'];
@@ -496,7 +496,7 @@ class ApiModel2 extends CI_Model
 						"<br>No Hp : " . $row['telepon'] .
 						"<br>Water Meter : " . $row['id_water_meter'];
 
-					$data_akhir = "Nama : " . $da['vcNama'] .
+					$data_akhir = "Nama : " . $da['vcNmPel'] .
 						"<br>Alamat : " . $da['alamat'] .
 						"<br>No Hp : " . $da['telepon'] .
 						"<br>Water Meter : " . $da['waterMeterId'];
