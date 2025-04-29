@@ -482,7 +482,7 @@ class ApiModel2 extends CI_Model
 						'operator'     => $id,
 					];
 
-					$this->db->insert('log_pelanggan', $data_log_pelanggan);
+					$this->db->insert('pelayanan.log_pelanggan', $data_log_pelanggan);
 					$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ?, id_water_meter = ? WHERE id = ?";
 					$this->db->query($sql_pelanggan, array($da['telepon'], $da['waterMeterId'], $row['id']));
 				}
@@ -511,7 +511,7 @@ class ApiModel2 extends CI_Model
 						'operator'     => $id,
 					];
 
-					$this->db->insert('log_pelanggan', $data_log_pelanggan);
+					$this->db->insert('pelayanan.log_pelanggan', $data_log_pelanggan);
 					$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ?, id_water_meter = ? WHERE id = ?";
 					$this->db->query($sql_pelanggan, array($da['telepon'], $da['waterMeterId'], $row['id']));
 				}
