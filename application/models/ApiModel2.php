@@ -428,11 +428,11 @@ class ApiModel2 extends CI_Model
 		$keterangan = [];
 
 		if ($noHpPelanggan !== $noHpUpload) {
-			$keterangan[] = 'no_hp';
+			$keterangan[] = 'No Hp';
 		}
 
 		if ($wmPelanggan !== $wmUpload) {
-			$keterangan[] = 'watermeter_id';
+			$keterangan[] = 'Water Meter';
 		}
 
 		if (empty($keterangan)) {
