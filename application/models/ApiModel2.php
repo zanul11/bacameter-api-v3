@@ -439,7 +439,7 @@ class ApiModel2 extends CI_Model
 			return '-';
 		}
 
-		return 'Update ' . implode(' dan ', $keterangan);
+		return 'Aplikasi Bacameter : Update ' . implode(' dan ', $keterangan);
 	}
 
 	public function updateDataV4($data, $id)
