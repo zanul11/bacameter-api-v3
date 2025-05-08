@@ -480,6 +480,8 @@ class ApiModel2 extends CI_Model
 						'keterangan'   => $this->getKeteranganPerubahan($row['telepon'], $da['cNoTelp'], $row['id_water_meter'], $da['waterMeterId']),
 						'aksi'         => "Ganti Profil",
 						'operator'     => $id,
+						'created_at'   => date('Y-m-d H:i:s'),
+						'updated_at'   => date('Y-m-d H:i:s')
 					];
 
 					$this->db->insert('pelayanan.log_pelanggan', $data_log_pelanggan);
@@ -509,6 +511,8 @@ class ApiModel2 extends CI_Model
 						'keterangan'   => $this->getKeteranganPerubahan($row['telepon'], $da['cNoTelp'], $row['id_water_meter'], $da['waterMeterId']),
 						'aksi'         => "Ganti Profil",
 						'operator'     => $id,
+						'created_at'   => date('Y-m-d H:i:s'),
+						'updated_at'   => date('Y-m-d H:i:s')
 					];
 
 					$this->db->insert('pelayanan.log_pelanggan', $data_log_pelanggan);
