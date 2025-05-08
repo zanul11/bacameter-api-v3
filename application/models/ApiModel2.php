@@ -465,12 +465,14 @@ class ApiModel2 extends CI_Model
 					$data_awal = "Nama : " . $row['nama'] .
 						"<br>Alamat : " . $row['alamat'] .
 						"<br>No Hp : " . $row['telepon'] .
-						"<br>Water Meter : " . $row['id_water_meter'];
+						"<br>Water Meter : " . $row['id_water_meter'] .
+						"<br>No Body : " . $row['no_body_water_meter'];
 
 					$data_akhir = "Nama : " . $da['vcNmPel'] .
 						"<br>Alamat : " . $da['alamat'] .
 						"<br>No Hp : " . $da['telepon'] .
-						"<br>Water Meter : " . $da['waterMeterId'];
+						"<br>Water Meter : " . $da['waterMeterId'].
+						"<br>No Body : " . $da['waterMeterNomor'];
 
 					$data_log_pelanggan = [
 						'id_transaksi' => null,
@@ -496,12 +498,14 @@ class ApiModel2 extends CI_Model
 					$data_awal = "Nama : " . $row['nama'] .
 						"<br>Alamat : " . $row['alamat'] .
 						"<br>No Hp : " . $row['telepon'] .
-						"<br>Water Meter : " . $row['id_water_meter'];
+						"<br>Water Meter : " . $row['id_water_meter'] .
+						"<br>No Body : " . $row['no_body_water_meter'];
 
 					$data_akhir = "Nama : " . $da['vcNmPel'] .
 						"<br>Alamat : " . $da['alamat'] .
 						"<br>No Hp : " . $da['telepon'] .
-						"<br>Water Meter : " . $da['waterMeterId'];
+						"<br>Water Meter : " . $da['waterMeterId'].
+						"<br>No Body : " . $da['waterMeterNomor'];
 
 					$data_log_pelanggan = [
 						'id_transaksi' => null,
