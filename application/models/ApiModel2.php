@@ -590,7 +590,7 @@ class ApiModel2 extends CI_Model
 	public function getBacUlang($id)
 	{
 		$date = date('Y-m-') . '01';
-		$sql = "select no_langganan from pelayanan.baca_meter b JOIN pelayanan.pelanggan p ON b.id_pelanggan=p.id where periode=? and id_pembaca=?";
+		$sql = "select no_langganan from pelayanan.baca_meter b JOIN pelayanan.pelanggan p ON b.id_pelanggan=p.id where b.periode=? AND b.id_pembaca=? AND b.tanggal_baca IS NOT NULL AND baca_ulang = 1";
 		$query = $this->db->query($sql, array($date, $id));
 		return $query->result_array();
 	}
