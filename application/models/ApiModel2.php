@@ -450,7 +450,7 @@ class ApiModel2 extends CI_Model
 		foreach ($data as $da) {
 			// return substr($da['txtFoto'], -27);
 			$foto = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
-			$query = $this->db->query("SELECT id, nama, alamat, id_water_meter, telepon, no_body_water_meter FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
+			$query = $this->db->query("SELECT id, nama, alamat, id_water_meter, telepon, no_body_water_meter, valid_telepon_at, valid_no_body_water_meter_at  FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
 			$row = $query->row_array();
 			$name_foto_survey = null;
 			if ($da['txtFotoSurvey'] != null) {
@@ -490,13 +490,17 @@ class ApiModel2 extends CI_Model
 					$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ?, id_water_meter = ? WHERE id = ?";
 					$this->db->query($sql_pelanggan, array($da['telepon'], $da['waterMeterId'], $row['id']));
 
-					if ($row['telepon'] != $da['telepon']) {
-						$sql_valid_hp = "UPDATE pelayanan.pelanggan SET valid_telepon_at = now() WHERE id = ?";
-						$this->db->query($sql_valid_hp, array( $row['id']));
+					if ($row['valid_telepon_at'] == null) {
+						if ($row['telepon'] != $da['telepon']) {
+							$sql_valid_hp = "UPDATE pelayanan.pelanggan SET valid_telepon_at = now() WHERE id = ?";
+							$this->db->query($sql_valid_hp, array($row['id']));
+						}
 					}
-					if ($row['id_water_meter'] != $da['waterMeterId']) {
-						$sql_valid_wm = "UPDATE pelayanan.pelanggan SET valid_no_body_water_meter_at = now() WHERE id = ?";
-						$this->db->query($sql_valid_wm, array( $row['id']));
+					if ($row['valid_no_body_water_meter_at'] == null) {
+						if ($row['id_water_meter'] != $da['waterMeterId']) {
+							$sql_valid_wm = "UPDATE pelayanan.pelanggan SET valid_no_body_water_meter_at = now() WHERE id = ?";
+							$this->db->query($sql_valid_wm, array($row['id']));
+						}
 					}
 				}
 			} else {
@@ -532,13 +536,18 @@ class ApiModel2 extends CI_Model
 					$sql_pelanggan = "UPDATE pelayanan.pelanggan SET telepon = ?, id_water_meter = ? WHERE id = ?";
 					$this->db->query($sql_pelanggan, array($da['telepon'], $da['waterMeterId'], $row['id']));
 
-					if ($row['telepon'] != $da['telepon']) {
-						$sql_valid_hp = "UPDATE pelayanan.pelanggan SET valid_telepon_at = now() WHERE id = ?";
-						$this->db->query($sql_valid_hp, array($row['id']));
+					if ($row['valid_telepon_at'] == null) {
+						if ($row['telepon'] != $da['telepon']) {
+							$sql_valid_hp = "UPDATE pelayanan.pelanggan SET valid_telepon_at = now() WHERE id = ?";
+							$this->db->query($sql_valid_hp, array($row['id']));
+						}
 					}
-					if ($row['id_water_meter'] != $da['waterMeterId']) {
-						$sql_valid_wm = "UPDATE pelayanan.pelanggan SET valid_no_body_water_meter_at = now() WHERE id = ?";
-						$this->db->query($sql_valid_wm, array($row['id']));
+
+					if ($row['valid_no_body_water_meter_at'] == null) {
+						if ($row['id_water_meter'] != $da['waterMeterId']) {
+							$sql_valid_wm = "UPDATE pelayanan.pelanggan SET valid_no_body_water_meter_at = now() WHERE id = ?";
+							$this->db->query($sql_valid_wm, array($row['id']));
+						}
 					}
 				}
 			}
