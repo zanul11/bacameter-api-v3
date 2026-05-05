@@ -395,12 +395,12 @@ class ApiModel2 extends CI_Model
 		$this->db->trans_begin();
 		foreach ($data as $da) {
 			// return substr($da['txtFoto'], -27);
-			$foto = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
+			$foto = 'http://upload.app-pdamgm.xyz:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
 			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
 			$row = $query->row_array();
 			$name_foto_survey = null;
 			if ($da['txtFotoSurvey'] != null) {
-				$name_foto_survey = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFotoSurvey'];
+				$name_foto_survey = 'http://upload.app-pdamgm.xyz:8084/images/' . $cBlth . $id . '/' . $da['txtFotoSurvey'];
 			}
 
 			if ($da['cKetWM'] == null) {
@@ -449,12 +449,12 @@ class ApiModel2 extends CI_Model
 		$this->db->trans_begin();
 		foreach ($data as $da) {
 			// return substr($da['txtFoto'], -27);
-			$foto = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
+			$foto = 'http://upload.app-pdamgm.xyz:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
 			$query = $this->db->query("SELECT id, nama, alamat, id_water_meter, telepon, no_body_water_meter, valid_telepon_at, valid_no_body_water_meter_at  FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
 			$row = $query->row_array();
 			$name_foto_survey = null;
 			if ($da['txtFotoSurvey'] != null) {
-				$name_foto_survey = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFotoSurvey'];
+				$name_foto_survey = 'http://upload.app-pdamgm.xyz:8084/images/' . $cBlth . $id . '/' . $da['txtFotoSurvey'];
 			}
 
 			if ($da['cKetWM'] == null) {
@@ -572,7 +572,7 @@ class ApiModel2 extends CI_Model
 		$sql = "UPDATE pelayanan.baca_meter SET new_latitude = ?, new_longitude = ?, telepon = ?, alamat = ?, indikasi_kelainan = ?, foto_survey = ?, catatan_survey = ?, stand_ini = ?, stand_ini_awal = ? , pakai = ?, status_baca = ?, valid_koordinat = ?, foto = ?,  tanggal_baca = ?, tanggal_upload = NOW() WHERE periode = ? AND id_pelanggan = ? AND tanggal_baca IS NULL";
 		$this->db->trans_begin();
 		foreach ($data as $da) {
-			$foto = 'http://10.10.222.236:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
+			$foto = 'http://upload.app-pdamgm.xyz:8084/images/' . $cBlth . $id . '/' . $da['txtFoto'];
 			$query = $this->db->query("SELECT id FROM pelayanan.pelanggan WHERE no_langganan = ? ", array($da['cIdPel']));
 			$row = $query->row_array();
 			$name_foto_survey = null;
